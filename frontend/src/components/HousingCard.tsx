@@ -9,9 +9,7 @@ export interface Housing {
   address: string;
   price: string;
   bedrooms: number;
-  bathrooms: number;
   distance: string;
-  available: string;
   image: string;
   amenities: string[];
   type: "apartment" | "house" | "dorm" | "studio";
@@ -47,8 +45,8 @@ export function HousingCard({ housing, onClick }: HousingCardProps) {
         </div>
 
         <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-          <span>{housing.bedrooms} bed</span>
-          <span>{housing.distance} from campus</span>
+          <span>{housing.bedrooms} bedrooms</span>
+          <span>{housing.distance}</span>
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -59,9 +57,6 @@ export function HousingCard({ housing, onClick }: HousingCardProps) {
           ))}
         </div>
 
-        <div className="mt-3 pt-3 border-t text-sm text-gray-500">
-          Available {housing.available}
-        </div>
       </CardContent>
     </Card>
   );

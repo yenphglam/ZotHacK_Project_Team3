@@ -1,4 +1,4 @@
-import { X, MapPin, DollarSign, Calendar, Home, Wifi, Car, WashingMachine, PawPrint, Zap, Droplet } from "lucide-react";
+import { Bath,SquareLibrary, BookOpenText,LampDesk, Dumbbell,Beef, Mic, X, MapPin, DollarSign, Calendar, Home, Wifi, Car, WashingMachine, PawPrint, Zap, Droplet } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -16,10 +16,17 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
 
   const amenityIcons: Record<string, any> = {
     "Parking": Car,
-    "WiFi": Wifi,
+    "Wifi": Wifi,
     "Laundry": WashingMachine,
     "Pet-Friendly": PawPrint,
     "Utilities Included": Zap,
+    "Clubhouse": Mic,
+    "BBQ area": Beef,
+    "Fitness center": Dumbbell,
+    "Workspace": LampDesk,
+    "Study Rooms": BookOpenText,
+    "Study Lounges":SquareLibrary,
+    "Private Bathrooms": Bath
   };
 
   return (
@@ -96,12 +103,10 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
               <div>
                 <h3 className="mb-2">Location</h3>
                 <p className="text-gray-700 mb-2">
-                  
-                  {housing.distance} from main campus
+                  {housing.distance === "on campus"
+                  ? "On Campus"
+                  : `${housing.distance} from main campus`}
                 </p>
-                <div className="bg-gray-100 rounded-lg p-4 text-center text-sm text-gray-600">
-                  Map view would appear here
-                </div>
               </div>
 
               <div className="space-y-3 pt-4">
