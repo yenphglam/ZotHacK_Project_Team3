@@ -301,7 +301,7 @@ export default function App() {
 
       {/* Hero Section */}
       {activeTab === "housing" && (
-        <div className="relative bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
+        <div className="relative bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20 hover:from-blue-600 hover:to-blue-800">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute inset-0" style={{
               backgroundImage: `url('https://images.unsplash.com/flagged/photo-1580408453889-ed5e1b51924a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwY2FtcHVzJTIwYnVpbGRpbmd8ZW58MXx8fHwxNzYyNTAxMTU0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')`,
@@ -316,13 +316,6 @@ export default function App() {
                 Discover housing options near UCI campus - from on-campus dorms to apartments in Irvine, Costa Mesa, and Newport Beach. Your Anteater home awaits!
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
-                  Browse Listings
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                  Post a Listing
-                </Button>
               </div>
             </div>
           </div>

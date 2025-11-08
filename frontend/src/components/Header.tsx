@@ -32,7 +32,7 @@ export function Header({ activeTab, onTabChange }: HeaderProps) {
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-2">
               <Home className="h-6 w-6 text-blue-600" />
-              <span className="text-xl">UCI Housing Hub</span>
+              <span className="text-xl">ZotHomes</span>
             </div>
             
             <nav className="hidden md:flex items-center gap-6">
@@ -72,7 +72,6 @@ export function Header({ activeTab, onTabChange }: HeaderProps) {
                     <User className="h-4 w-4 mr-2" />
                     Sign In
                   </Button>
-                  <Button size="sm" onClick={() => setSignInOpen(true)}>Get Started</Button>
                 </>
               ) : (
                 <Button variant="ghost" size="sm">
