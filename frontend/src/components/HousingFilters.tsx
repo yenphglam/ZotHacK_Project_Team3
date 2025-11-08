@@ -51,62 +51,71 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
         </Select>
 
         <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline">
-              <SlidersHorizontal className="h-4 w-4 mr-2" />
-              More Filters
-            </Button>
-          </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Filter Options</SheetTitle>
-            </SheetHeader>
-            <div className="mt-6 space-y-6">
-              <div>
-                <Label className="mb-3">Price Range</Label>
-                <div className="pt-2">
-                  <Slider defaultValue={[500, 2000]} max={3000} min={0} step={50} />
-                  <div className="flex justify-between mt-2 text-sm text-gray-600">
-                    <span>$0</span>
-                    <span>$3000</span>
-                  </div>
+        <SheetTrigger asChild>
+          <Button variant="outline">
+            <SlidersHorizontal className="h-4 w-4 mr-2" />
+            More Filters
+          </Button>
+        </SheetTrigger>
+        <SheetContent className="overflow-y-auto p-6">
+          {/* ↑ Added p-6 for more padding */}
+          <SheetHeader className="mb-6">
+            <SheetTitle>Filter Options</SheetTitle>
+          </SheetHeader>
+          <div className="space-y-8">
+            {/* ↓ Removed pr-2, padding is now handled by SheetContent */}
+            {/* Price Range Section */}
+            <div className="space-y-4">
+              <Label className="text-base font-semibold">Price Range</Label>
+              <div className="pt-2 px-2">
+                <Slider defaultValue={[500, 2000]} max={3000} min={0} step={50} />
+                <div className="flex justify-between mt-3 text-sm text-gray-600">
+                  <span>$0</span>
+                  <span>$3000</span>
                 </div>
               </div>
-
-              <div>
-                <Label className="mb-3">Amenities</Label>
-                <div className="space-y-3">
-                  {['Parking', 'WiFi', 'Laundry', 'Pet-Friendly', 'Furnished', 'Utilities Included'].map((amenity) => (
-                    <div key={amenity} className="flex items-center space-x-2">
-                      <Checkbox id={amenity} />
-                      <label htmlFor={amenity} className="text-sm cursor-pointer">
-                        {amenity}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <Label className="mb-3">Distance from Campus</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Any distance" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any">Any distance</SelectItem>
-                    <SelectItem value="walking">Walking distance</SelectItem>
-                    <SelectItem value="1mi">Within 1 mile</SelectItem>
-                    <SelectItem value="3mi">Within 3 miles</SelectItem>
-                    <SelectItem value="5mi">Within 5 miles</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <Button className="w-full">Apply Filters</Button>
             </div>
-          </SheetContent>
-        </Sheet>
+
+            {/* Amenities Section */}
+            <div className="space-y-4">
+              <Label className="text-base font-semibold">Amenities</Label>
+              <div className="space-y-4 pl-1">
+                {['Parking', 'WiFi', 'Laundry', 'Pet-Friendly', 'Furnished', 'Utilities Included'].map((amenity) => (
+                  <div key={amenity} className="flex items-center space-x-3">
+                    <Checkbox id={amenity} />
+                    <label 
+                      htmlFor={amenity} 
+                      className="text-sm cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      {amenity}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Distance Section */}
+            <div className="space-y-4">
+              <Label className="text-base font-semibold">Distance from Campus</Label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Any distance" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any">Any distance</SelectItem>
+                  <SelectItem value="walking">Walking distance</SelectItem>
+                  <SelectItem value="1mi">Within 1 mile</SelectItem>
+                  <SelectItem value="3mi">Within 3 miles</SelectItem>
+                  <SelectItem value="5mi">Within 5 miles</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Apply Button */}
+            <Button className="w-full mt-6">Apply Filters</Button>
+          </div>
+        </SheetContent>
+      </Sheet>
       </div>
     </div>
   );
