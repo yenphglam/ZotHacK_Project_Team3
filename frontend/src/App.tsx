@@ -1,21 +1,21 @@
 import { useState } from "react";
 import { Header } from "./components/Header";
-import { HousingCard } from "./components/HousingCard";
-import { RoommateCard } from "./components/RoommateCard";
+import { HousingCard, Housing } from "./components/HousingCard";
+import { RoommateCard, Roommate } from "./components/RoommateCard";
 import { HousingFilters } from "./components/HousingFilters";
 import { RoommateFilters } from "./components/RoommateFilters";
 import { HousingGuide } from "./components/HousingGuide";
 import { HousingDetail } from "./components/HousingDetail";
 import { Button } from "./components/ui/button";
-import { Search, Home, Users, BookOpen, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("housing");
-  const [selectedHousing, setSelectedHousing] = useState(null);
+  const [activeTab, setActiveTab] = useState<string>("housing");
+  const [selectedHousing, setSelectedHousing] = useState<Housing | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
 
   // UC Irvine specific housing options
-  const mockHousingData = [
+  const mockHousingData: Housing[] = [
     {
       id: "1",
       title: "Campus Village Apartments",
@@ -175,7 +175,7 @@ export default function App() {
   ];
 
   // UCI Students looking for roommates
-  const mockRoommateData = [
+  const mockRoommateData: Roommate[] = [
     {
       id: "1",
       name: "Sarah Johnson",
@@ -290,7 +290,7 @@ export default function App() {
     }
   ];
 
-  const handleHousingClick = (housing) => {
+  const handleHousingClick = (housing: Housing) => {
     setSelectedHousing(housing);
     setDetailOpen(true);
   };
