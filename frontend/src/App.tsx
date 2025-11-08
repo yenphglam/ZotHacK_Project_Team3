@@ -18,13 +18,11 @@ export default function App() {
   const mockHousingData: Housing[] = [
     {
       id: "1",
-      title: "Campus Village Apartments",
+      title: "Plaza Verde Apartments",
       address: "Campus Dr, Irvine, CA 92617",
-      price: 1450,
+      price: "$1,400–$1,900",
       bedrooms: 2,
-      bathrooms: 2,
       distance: "On Campus",
-      available: "September 2025",
       image: "https://images.unsplash.com/photo-1563418536419-3a3ad6ef5efd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcGFydG1lbnQlMjBpbnRlcmlvciUyMG1vZGVybnxlbnwxfHx8fDE3NjI1Nzg2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["WiFi", "Parking", "Pool", "Study Rooms", "Gym Access"],
       type: "apartment"

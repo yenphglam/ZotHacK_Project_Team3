@@ -7,7 +7,7 @@ export interface Housing {
   id: string;
   title: string;
   address: string;
-  price: number;
+  price: string;
   bedrooms: number;
   bathrooms: number;
   distance: string;
@@ -48,7 +48,6 @@ export function HousingCard({ housing, onClick }: HousingCardProps) {
 
         <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
           <span>{housing.bedrooms} bed</span>
-          <span>{housing.bathrooms} bath</span>
           <span>{housing.distance} from campus</span>
         </div>
 

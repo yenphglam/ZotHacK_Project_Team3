@@ -49,7 +49,7 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
                   </div>
                   <div className="flex items-center gap-2 text-gray-700">
                     <Home className="h-4 w-4 text-gray-400" />
-                    <span>{housing.bedrooms} bedrooms, {housing.bathrooms} bathrooms</span>
+                    <span>{housing.bedrooms} bedrooms</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-700">
                     <MapPin className="h-4 w-4 text-gray-400" />
@@ -57,7 +57,6 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
                   </div>
                   <div className="flex items-center gap-2 text-gray-700">
                     <Calendar className="h-4 w-4 text-gray-400" />
-                    <span>Available {housing.available}</span>
                   </div>
                 </div>
               </div>
@@ -88,7 +87,7 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
                 <h3 className="mb-2">Description</h3>
                 <p className="text-gray-700">
                   This {housing.type} is located {housing.distance} from campus, making it perfect for students. 
-                  The property features {housing.bedrooms} spacious bedrooms and {housing.bathrooms} modern bathrooms. 
+                  The property features {housing.bedrooms} spacious bedrooms. 
                   With amenities including {housing.amenities.slice(0, 3).join(', ')}, you'll have everything you need 
                   for a comfortable college living experience.
                 </p>
@@ -97,6 +96,7 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
               <div>
                 <h3 className="mb-2">Location</h3>
                 <p className="text-gray-700 mb-2">
+                  
                   {housing.distance} from main campus
                 </p>
                 <div className="bg-gray-100 rounded-lg p-4 text-center text-sm text-gray-600">
