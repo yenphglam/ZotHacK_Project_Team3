@@ -1,0 +1,117 @@
+import { X, MapPin, DollarSign, Calendar, Home, Wifi, Car, WashingMachine, PawPrint, Zap, Droplet } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { Housing } from "./HousingCard";
+
+interface HousingDetailProps {
+  housing: Housing | null;
+  open: boolean;
+  onClose: () => void;
+}
+
+export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
+  if (!housing) return null;
+
+  const amenityIcons: Record<string, any> = {
+    "Parking": Car,
+    "WiFi": Wifi,
+    "Laundry": WashingMachine,
+    "Pet-Friendly": PawPrint,
+    "Utilities Included": Zap,
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{housing.title}</DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          <div className="aspect-video relative overflow-hidden rounded-lg">
+            <ImageWithFallback
+              src={housing.image}
+              alt={housing.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div>
+                <h3 className="mb-2">Details</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <DollarSign className="h-4 w-4 text-gray-400" />
+                    <span>${housing.price} per month</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <Home className="h-4 w-4 text-gray-400" />
+                    <span>{housing.bedrooms} bedrooms, {housing.bathrooms} bathrooms</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <MapPin className="h-4 w-4 text-gray-400" />
+                    <span>{housing.address}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <Calendar className="h-4 w-4 text-gray-400" />
+                    <span>Available {housing.available}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="mb-2">Property Type</h3>
+                <Badge>{housing.type}</Badge>
+              </div>
+
+              <div>
+                <h3 className="mb-3">Amenities</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {housing.amenities.map((amenity) => {
+                    const Icon = amenityIcons[amenity] || Home;
+                    return (
+                      <div key={amenity} className="flex items-center gap-2 text-sm">
+                        <Icon className="h-4 w-4 text-blue-600" />
+                        <span>{amenity}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <h3 className="mb-2">Description</h3>
+                <p className="text-gray-700">
+                  This {housing.type} is located {housing.distance} from campus, making it perfect for students. 
+                  The property features {housing.bedrooms} spacious bedrooms and {housing.bathrooms} modern bathrooms. 
+                  With amenities including {housing.amenities.slice(0, 3).join(', ')}, you'll have everything you need 
+                  for a comfortable college living experience.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="mb-2">Location</h3>
+                <p className="text-gray-700 mb-2">
+                  {housing.distance} from main campus
+                </p>
+                <div className="bg-gray-100 rounded-lg p-4 text-center text-sm text-gray-600">
+                  Map view would appear here
+                </div>
+              </div>
+
+              <div className="space-y-3 pt-4">
+                <Button className="w-full">Schedule a Tour</Button>
+                <Button variant="outline" className="w-full">Contact Landlord</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
