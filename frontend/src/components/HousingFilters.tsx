@@ -1,4 +1,5 @@
-import { Search, SlidersHorizontal } from "lucide-react";
+import { useState } from "react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
@@ -7,11 +8,14 @@ import { Label } from "./ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Checkbox } from "./ui/checkbox";
 
+
 interface HousingFiltersProps {
   onFilterChange: (filters: any) => void;
 }
 
+
 export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
+  const [searchTerm, setSearchTerm] = useState("");
   return (
     <div className="bg-white border rounded-lg p-4 mb-6">
       <div className="flex flex-col md:flex-row gap-4">
@@ -19,14 +23,31 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="Search by location, neighborhood..."
-              className="pl-10"
+              placeholder="Search by location, neighborhood, amenities... (e.g., 'pool', 'on campus', 'Irvine')"
+              className="pl-10 pr-10"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                onFilterChange({ searchTerm: e.target.value });
+              }}
             />
+            {searchTerm && (
+              <button
+                onClick={() => {
+                  setSearchTerm("");
+                  onFilterChange({ searchTerm: "" });
+                }}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
 
+
         <Select>
-          <SelectTrigger className="w-full md:w-">
+          <SelectTrigger className="w-full md:w-48">
             <SelectValue placeholder="Property Type" />
           </SelectTrigger>
           <SelectContent>
@@ -37,6 +58,7 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
             <SelectItem value="studio">Studio</SelectItem>
           </SelectContent>
         </Select>
+
 
         <Select>
           <SelectTrigger className="w-full md:w-48">
@@ -50,6 +72,7 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
           </SelectContent>
         </Select>
 
+
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline">
@@ -57,25 +80,26 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
               More Filters
             </Button>
           </SheetTrigger>
-          <SheetContent className="w-auto min-w-[400px] max-w-[800px]">
+          <SheetContent>
             <SheetHeader>
               <SheetTitle>Filter Options</SheetTitle>
             </SheetHeader>
             <div className="mt-6 space-y-6">
               <div>
-                <Label className="mb-3 ml-2">Price Range</Label>
+                <Label className="mb-3">Price Range</Label>
                 <div className="pt-2">
-                  <Slider className="ml-2 mb-3" defaultValue={[500, 2000]} max={3000} min={0} step={100} />
+                  <Slider defaultValue={[500, 2000]} max={3000} min={0} step={50} />
                   <div className="flex justify-between mt-2 text-sm text-gray-600">
-                    <span className="ml-2 mb-3">$0</span>
-                    <span className="ml-2 mb-3">$3000</span>
+                    <span>$0</span>
+                    <span>$3000</span>
                   </div>
                 </div>
               </div>
 
+
               <div>
-                <Label className="mb-3 ml-2">Amenities</Label>
-                <div className="space-y-2 ml-2">
+                <Label className="mb-3">Amenities</Label>
+                <div className="space-y-3">
                   {['Parking', 'WiFi', 'Laundry', 'Pet-Friendly', 'Furnished', 'Utilities Included'].map((amenity) => (
                     <div key={amenity} className="flex items-center space-x-2">
                       <Checkbox id={amenity} />
@@ -87,13 +111,14 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
                 </div>
               </div>
 
+
               <div>
-                <Label className="mb-3 ml-2">Distance from Campus</Label>
+                <Label className="mb-3">Distance from Campus</Label>
                 <Select>
-                  <SelectTrigger className="ml-2 mb-3">
+                  <SelectTrigger>
                     <SelectValue placeholder="Any distance" />
                   </SelectTrigger>
-                  <SelectContent className="ml-2 mb-3">
+                  <SelectContent>
                     <SelectItem value="any">Any distance</SelectItem>
                     <SelectItem value="walking">Walking distance</SelectItem>
                     <SelectItem value="1mi">Within 1 mile</SelectItem>
@@ -103,7 +128,8 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
                 </Select>
               </div>
 
-              <Button className="ml-2 mb-2 w-600">Apply Filters</Button>
+
+              <Button className="w-full">Apply Filters</Button>
             </div>
           </SheetContent>
         </Sheet>

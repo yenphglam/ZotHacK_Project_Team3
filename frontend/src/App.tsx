@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "./components/Header";
 import { HousingCard, Housing } from "./components/HousingCard";
 import { RoommateCard, Roommate } from "./components/RoommateCard";
@@ -7,12 +7,15 @@ import { RoommateFilters } from "./components/RoommateFilters";
 import { HousingGuide } from "./components/HousingGuide";
 import { HousingDetail } from "./components/HousingDetail";
 import { Button } from "./components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
+
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>("housing");
   const [selectedHousing, setSelectedHousing] = useState<Housing | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [filteredHousing, setFilteredHousing] = useState<Housing[]>([]);
+
 
   // UC Irvine specific housing options
   const mockHousingData: Housing[] = [
@@ -23,8 +26,8 @@ export default function App() {
       price: "$1,400–$1,900",
       bedrooms: "1-4",
       distance: "On Campus",
-      image: "https://www.americancampus.com/getmedia/0210fef0-b254-4af1-98a2-6459b1442e76/728_18_Gallery_730x547.jpg",
-      amenities: ["Wifi", "Parking", "Pool", "Study Rooms", "Gym Access", "Study Lounges", "Private Bathrooms", "Laundry"],
+      image: "https://www.americancampus.com/getmedia/43aa50d3-94ff-45f5-ad2a-a10858d718dd/728_Main-Hero_1440x576.jpg",
+      amenities: ["Wifi", "Parking", "Pool", "Study Rooms", "Gym Access", "Study Lounges", "Private Bathrooms", "Laundry", ""],
       type: "Apartment"
     },
     {
@@ -35,7 +38,7 @@ export default function App() {
       bedrooms: "2-3",
       distance: "On Campus",
       image: "https://www.americancampus.com/getmedia/5e1af59f-6396-4724-ba31-df31804976e2/760_Main-Hero_1440x576.jpg",
-      amenities: ["Furnished", "Wifi", "Parking", "Utilities Included", "Basketball Court", "Controlled access", "Study Lounges", "Courtyard",
+      amenities: ["Furnished", "Wifi", "Parking", "Utilities Included", "Basketball Court", "Controlled access", "Study lounge", "Courtyard",
     "BBQ area"],
       type: "Apartment"
     },
@@ -52,17 +55,19 @@ export default function App() {
     },
 
 
+
+
     {
       id: "5",
       title: "Harvard & Cornell Court",
       address: "20 Harvard Ct, Irvine, CA 92612",
       price: "2,500-3,400",
       bedrooms: "1-3",
-      distance: "0.4 mi from campus",
+      distance: "0.4 from campus",
       image: "https://dynamicmedia.irvinecompany.com/is/image/content/dam/apartments/3-readytopublish/communities/orangecounty/irvine/universitytowncenter/harvardcourt/photography/Harvard-CMF-4236.jpg?&wid=1920&iccEmbed=1&icc=AdobeRGB&resMode=sharp2&fmt=pjpeg&pscan=auto",
       amenities: [ "Pool",
       "Fitness center",
-      "Study Lounges",
+      "Study lounge",
       "Events",
       "Furnished apartments",
       "Laundry",
@@ -75,7 +80,7 @@ export default function App() {
       title: "Stanford Court",
       address: "20 Peters Canyon Rd, Irvine, CA 92606",
       price: "2,300-3,100",
-      bedrooms: 1,
+      bedrooms: "1",
       distance: "0.3 mi from UCI",
       image: "https://dynamicmedia.irvinecompany.com/is/image/content/dam/apartments/3-readytopublish/communities/orangecounty/irvine/universitytowncenter/stanfordcourt/photography/Stanford-CMF-4339.jpg?&crop=0,751,7195,4049&wid=1360&iccEmbed=1&icc=AdobeRGB&resMode=sharp2&fmt=pjpeg&pscan=auto",
       amenities: ["Pool",
@@ -132,7 +137,7 @@ export default function App() {
       title: "Toscana Apartments",
       address: "35 Via Lucca, Irvine, CA 92612",
       price: "2,600-3,600",
-      bedrooms: 1,
+      bedrooms: "1",
       distance: "2.3 mi from campus",
       image: "https://media.equityapartments.com/images/q_auto/f_auto/fl_lossy/1558-127/toscana-apartments-living-room",
       amenities: ["Pool",
@@ -158,7 +163,7 @@ export default function App() {
       amenities: [ "Rooftop deck",
       "Fitness center",
       "Pool",
-      "Study Lounges",
+      "Study lounge",
       "Pet-friendly",
       "Bike storage",
       "Package lockers",
@@ -172,7 +177,7 @@ export default function App() {
       address: "25 Palatine, Irvine, CA 92612",
       price: "2,400-3,600",
       bedrooms: "Studio, 1-3",
-      distance: "1.6 mi from UCI",   
+      distance: "1.6 mi from UCI",  
       image: "https://i.rent.com/t_w_webp_2xl/0811a77c3c32836ca17751c8d5ea19ad",
       amenities: ["Wifi", "Parking", "Laundry", "Study Rooms"],
       type: "Apartment"
@@ -182,14 +187,14 @@ export default function App() {
       title: "Elements Apartments",
       address: "1000 Elements Way, Irvine, CA 92612",
       price: "3,000-4,200",
-      bedrooms: 2,
+      bedrooms: "2",
       distance: "2.7 mi from UCI",
       image: "https://cdngeneral.point2homes.com/dmslivecafe/2/93425/Garden_Elements_Metal__06112021%20(5).jpg?width=1600&quality=80",
       amenities: ["Pool",
       "BBQ area",
       "Fitness center",
       "Yoga room",
-      "Study Lounges",
+      "Study lounge",
       "Clubhouse",
       "EV charging",
       "Pet-friendly",
@@ -201,7 +206,9 @@ export default function App() {
       type: "Apartment"
     }
 
+
   ];
+
 
   // UCI Students looking for roommates
   const mockRoommateData: Roommate[] = [
@@ -319,14 +326,66 @@ export default function App() {
     }
   ];
 
+
+  // Initialize filtered housing data
+  useEffect(() => {
+    setFilteredHousing(mockHousingData);
+  }, []);
+
+
+  const handleFilterChange = (filters: { searchTerm?: string }) => {
+    let filtered = mockHousingData;
+
+
+    if (filters.searchTerm && filters.searchTerm.trim() !== "") {
+      const searchLower = filters.searchTerm.toLowerCase().trim();
+      filtered = filtered.filter((housing) => {
+        // Search in basic properties
+        const basicMatch = (
+          housing.title.toLowerCase().includes(searchLower) ||
+          housing.address.toLowerCase().includes(searchLower) ||
+          housing.distance.toLowerCase().includes(searchLower) ||
+          housing.type.toLowerCase().includes(searchLower) ||
+          housing.price.toLowerCase().includes(searchLower) ||
+          housing.bedrooms.toLowerCase().includes(searchLower)
+        );
+
+
+        // Search in amenities
+        const amenitiesMatch = housing.amenities.some(amenity =>
+          amenity.toLowerCase().includes(searchLower)
+        );
+
+
+        // Search for common location terms
+        const locationMatch = (
+          (searchLower.includes('campus') && housing.distance.toLowerCase().includes('campus')) ||
+          (searchLower.includes('irvine') && housing.address.toLowerCase().includes('irvine')) ||
+          (searchLower.includes('uci') && housing.distance.toLowerCase().includes('uci')) ||
+          (searchLower.includes('on campus') && housing.distance.toLowerCase().includes('on campus')) ||
+          (searchLower.includes('off campus') && !housing.distance.toLowerCase().includes('on campus'))
+        );
+
+
+        return basicMatch || amenitiesMatch || locationMatch;
+      });
+    }
+
+
+    setFilteredHousing(filtered);
+  };
+
+
   const handleHousingClick = (housing: Housing) => {
     setSelectedHousing(housing);
     setDetailOpen(true);
   };
 
+
   return (
     <div className="min-h-screen bg-white">
       <Header activeTab={activeTab} onTabChange={setActiveTab} />
+
 
       {/* Hero Section */}
       {activeTab === "housing" && (
@@ -358,28 +417,54 @@ export default function App() {
         </div>
       )}
 
+
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {activeTab === "housing" && (
           <div>
-            <HousingFilters onFilterChange={() => {}} />
-            
+            <HousingFilters onFilterChange={handleFilterChange} />
+           
             <div className="mb-6">
               <h2 className="mb-2">Available Housing</h2>
-              <p className="text-gray-600">{mockHousingData.length} listings found</p>
+              <p className="text-gray-600">
+                {filteredHousing.length} of {mockHousingData.length} listings found
+              </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockHousingData.map((housing) => (
-                <HousingCard
-                  key={housing.id}
-                  housing={housing}
-                  onClick={() => handleHousingClick(housing)}
-                />
-              ))}
-            </div>
+
+            {filteredHousing.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-gray-400 mb-4">
+                  <Search className="h-12 w-12 mx-auto" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No housing found</h3>
+                <p className="text-gray-600 mb-4">
+                  Try adjusting your search terms or filters to find more results.
+                </p>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    // This will trigger a reset by calling the filter with empty search
+                    handleFilterChange({ searchTerm: "" });
+                  }}
+                >
+                  Show All Listings
+                </Button>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredHousing.map((housing) => (
+                  <HousingCard
+                    key={housing.id}
+                    housing={housing}
+                    onClick={() => handleHousingClick(housing)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
+
 
         {activeTab === "roommates" && (
           <div>
@@ -390,11 +475,14 @@ export default function App() {
               </p>
             </div>
 
+
             <RoommateFilters onFilterChange={() => {}} />
+
 
             <div className="mb-6">
               <p className="text-gray-600">{mockRoommateData.length} profiles available</p>
             </div>
+
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {mockRoommateData.map((roommate) => (
@@ -404,8 +492,10 @@ export default function App() {
           </div>
         )}
 
+
         {activeTab === "guide" && <HousingGuide />}
       </main>
+
 
       <HousingDetail
         housing={selectedHousing}

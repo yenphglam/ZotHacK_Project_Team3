@@ -8,11 +8,11 @@ export interface Housing {
   title: string;
   address: string;
   price: string;
-  bedrooms: number;
+  bedrooms: string;
   distance: string;
   image: string;
   amenities: string[];
-  type: "apartment" | "house" | "dorm" | "studio";
+  type: string;
 }
 
 interface HousingCardProps {

@@ -57,14 +57,14 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
               More Filters
             </Button>
           </SheetTrigger>
-          <SheetContent className="ml-2 mb-3">
+          <SheetContent className="overflow-y-auto p-6">
             <SheetHeader>
               <SheetTitle>Filter Preferences</SheetTitle>
             </SheetHeader>
             <div className="mt-6 space-y-6">
               <div>
-                <Label className="mb-3 ml-2">Lifestyle Preferences</Label>
-                <div className="space-y-3 ml-2">
+                <Label className="mb-3">Lifestyle Preferences</Label>
+                <div className="space-y-3">
                   {['Clean & Organized', 'Quiet Hours', 'Social & Friendly', 'Pet-Friendly', 'Non-Smoker', 'Early Riser'].map((pref) => (
                     <div key={pref} className="flex items-center space-x-2">
                       <Checkbox id={pref} />
@@ -77,10 +77,10 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
               </div>
 
               <div>
-                <Label className="mb-3 ml-2">Move-in Timeline</Label>
+                <Label className="mb-3">Move-in Timeline</Label>
                 <Select>
                   <SelectTrigger>
-                    <SelectValue className= "ml-2 mb-3" placeholder="Any time" />
+                    <SelectValue className= "ml-2" placeholder="Any time" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem className= "ml-2 mb-3" value="any">Any time</SelectItem>
@@ -92,9 +92,9 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
               </div>
 
               <div>
-                <Label className="mb-3 ml-2">Gender Preference</Label>
+                <Label className="mb-3">Gender Preference</Label>
                 <Select>
-                  <SelectTrigger className="mb-3 ml-2">
+                  <SelectTrigger className="mb-3">
                     <SelectValue placeholder="No preference" />
                   </SelectTrigger>
                   <SelectContent>
