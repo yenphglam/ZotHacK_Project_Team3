@@ -8,7 +8,7 @@ import { HousingGuide } from "./components/HousingGuide";
 import { HousingDetail } from "./components/HousingDetail";
 import { ProfileForm } from "./components/ProfileForm";
 import { Button } from "./components/ui/button";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2, Users } from "lucide-react";
 import { useRoommates } from "./hooks/useRoommates";
 import { auth } from "./lib/firebase";
 import { getUserProfile } from "./lib/firebase";
@@ -25,6 +25,14 @@ export default function App() {
 
   // Fetch roommates from Firebase
   const { roommates, loading: roommatesLoading, error: roommatesError } = useRoommates();
+
+  // Filtered roommates state
+  const [filteredRoommates, setFilteredRoommates] = useState<any[]>([]);
+
+  // Initialize filtered roommates when roommates load
+  useEffect(() => {
+    setFilteredRoommates(roommates);
+  }, [roommates]);
 
   useEffect(() => {
     console.log('📊 Roommates Debug:', {
@@ -315,6 +323,94 @@ export default function App() {
     setActiveTab("roommates");
   };
 
+  const handleRoommateFilterChange = (filters: any) => {
+  console.log('🔍 Applying roommate filters:', filters);
+  
+  let filtered = roommates;
+
+  // Search query
+  if (filters.searchQuery && filters.searchQuery.trim() !== '') {
+    const query = filters.searchQuery.toLowerCase();
+    filtered = filtered.filter(roommate => 
+      roommate.name.toLowerCase().includes(query) ||
+      roommate.major.toLowerCase().includes(query) ||
+      roommate.bio.toLowerCase().includes(query) ||
+      roommate.interests.some((i: string) => i.toLowerCase().includes(query))
+    );
+  }
+
+  // Academic year
+  if (filters.year && filters.year !== 'all') {
+    filtered = filtered.filter(roommate => roommate.year === filters.year);
+  }
+
+  // Budget range - check if budgets overlap
+  if (filters.budgetRange && filters.budgetRange.length === 2) {
+    filtered = filtered.filter(roommate => {
+      const overlap = 
+        Math.min(roommate.budgetMax, filters.budgetRange[1]) -
+        Math.max(roommate.budgetMin, filters.budgetRange[0]);
+      return overlap > 0;
+    });
+  }
+
+  // Sleep schedule
+  if (filters.sleepSchedule && filters.sleepSchedule !== 'any') {
+    filtered = filtered.filter(roommate => 
+      roommate.sleepSchedule === filters.sleepSchedule ||
+      roommate.sleepSchedule === 'flexible' ||
+      filters.sleepSchedule === 'flexible'
+    );
+  }
+
+  // Cleanliness level
+  if (filters.cleanliness && filters.cleanliness.length === 2) {
+    filtered = filtered.filter(roommate => {
+      const roommateClean = roommate.cleanliness[0];
+      return roommateClean >= filters.cleanliness[0] && 
+             roommateClean <= filters.cleanliness[1];
+    });
+  }
+
+  // Move-in date
+  if (filters.moveInDate && filters.moveInDate !== 'any') {
+    filtered = filtered.filter(roommate => 
+      roommate.moveInDate === filters.moveInDate ||
+      roommate.moveInDate === 'Flexible' ||
+      filters.moveInDate === 'Flexible'
+    );
+  }
+
+  // Preferences
+  // Preferences
+  if (filters.preferences && filters.preferences.length > 0) {
+    filtered = filtered.filter(roommate => {
+      const prefMap: Record<string, keyof typeof roommate.preferences> = {
+        'Clean & Organized': 'cleanOrganized',
+        'Quiet Hours': 'quietHours',
+        'Non-Smoker': 'nonSmoker',
+        'Pets Allowed': 'petsAllowed',
+        'Guests Okay': 'guestsOk'
+      };
+
+      return filters.preferences.every((pref: string) => {
+        const prefKey = prefMap[pref];
+        return prefKey && roommate.preferences[prefKey] === true;
+      });
+    });
+  }
+
+  // Minimum match score
+  if (filters.minMatchScore && filters.minMatchScore > 0) {
+    filtered = filtered.filter(roommate => 
+      (roommate.matchScore || 0) >= filters.minMatchScore
+    );
+  }
+
+  console.log('✅ Filtered roommates:', filtered.length);
+  setFilteredRoommates(filtered);
+};
+
   return (
     <div className="min-h-screen bg-white">
       <Header 
@@ -379,11 +475,14 @@ export default function App() {
         {activeTab === "roommates" && (
           <div>
             <div className="mb-8">
-              <h2 className="mb-2">Find Your Perfect Roommate</h2>
+              <h2 className="mb-3 text-2xl font-bold">Find Your Perfect Roommate</h2>
               <p className="text-gray-600">
-                Connect with fellow UCI students looking for compatible living situations
+                {filteredRoommates.length} compatible roommate{filteredRoommates.length !== 1 ? 's' : ''} found
               </p>
             </div>
+
+            {/* Single Filter Bar */}
+            <RoommateFilters onFilterChange={handleRoommateFilterChange} />
 
             {/* Show message if not signed in */}
             {!user && (
@@ -424,13 +523,12 @@ export default function App() {
               </div>
             )}
 
-            {/* Show roommates from Firebase */}
+            {/* Show roommates */}
             {user && hasProfile && !roommatesLoading && !roommatesError && (
               <>
-                <RoommateFilters onFilterChange={() => {}} />
-
                 {roommates.length === 0 ? (
                   <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-600 mb-4 text-lg">
                       No roommate matches found yet.
                     </p>
@@ -438,20 +536,22 @@ export default function App() {
                       Check back soon as more students join!
                     </p>
                   </div>
+                ) : filteredRoommates.length === 0 ? (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      No roommates match your filters
+                    </h3>
+                    <p className="text-gray-600 mb-4">
+                      Try adjusting your search criteria to see more results
+                    </p>
+                  </div>
                 ) : (
-                  <>
-                    <div className="mb-6">
-                      <p className="text-gray-600">
-                        {roommates.length} compatible roommate{roommates.length !== 1 ? 's' : ''} found
-                      </p>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {roommates.map((roommate) => (
-                        <RoommateCard key={roommate.id} roommate={roommate} />
-                      ))}
-                    </div>
-                  </>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredRoommates.map((roommate) => (
+                      <RoommateCard key={roommate.id} roommate={roommate} />
+                    ))}
+                  </div>
                 )}
               </>
             )}
