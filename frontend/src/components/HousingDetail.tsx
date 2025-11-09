@@ -1,4 +1,4 @@
-import { Bath,SquareLibrary, BookOpenText,LampDesk, Dumbbell,Beef, Mic, X, MapPin, DollarSign, Calendar, Home, Wifi, Car, WashingMachine, PawPrint, Zap, Droplet } from "lucide-react";
+import { MonitorCog, Turntable, EvCharger, Bike, Bone, CigaretteOff, WavesLadder, LandPlot, Bath,SquareLibrary, BookOpenText,LampDesk, Dumbbell,Beef, Mic, X, MapPin, DollarSign, Calendar, Home, Wifi, Car, WashingMachine, PawPrint, Zap, Droplet } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -25,8 +25,16 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
     "Fitness center": Dumbbell,
     "Workspace": LampDesk,
     "Study Rooms": BookOpenText,
-    "Study Lounges":SquareLibrary,
-    "Private Bathrooms": Bath
+    "Study Lounges": SquareLibrary,
+    "Pool": WavesLadder,
+    "Private Bathrooms": Bath,
+    "Gym Access": LandPlot,
+    "Smoke-free": CigaretteOff,
+    "Pet-friendly": Bone,
+    "Yoga room": Bike,
+    "EV charging": EvCharger,
+    "Rooftop deck": Turntable,
+    "Controlled access": MonitorCog
   };
 
   return (
@@ -105,7 +113,7 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
                 <p className="text-gray-700 mb-2">
                   {housing.distance === "on campus"
                   ? "On Campus"
-                  : `${housing.distance} from main campus`}
+                  : `${housing.distance}`}
                 </p>
               </div>
 
