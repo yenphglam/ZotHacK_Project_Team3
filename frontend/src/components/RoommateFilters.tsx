@@ -24,7 +24,19 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
   const [preferences, setPreferences] = useState<string[]>([]);
   const [minMatchScore, setMinMatchScore] = useState(0);
 
+  // Auto-apply filters whenever ANY state changes
   useEffect(() => {
+    console.log('🔄 Filter changed, applying...', {
+      searchQuery,
+      year,
+      budgetRange,
+      sleepSchedule,
+      cleanliness,
+      moveInDate,
+      preferences,
+      minMatchScore
+    });
+
     onFilterChange({
       searchQuery,
       year,
@@ -46,20 +58,6 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
     );
   };
 
-  // Apply filters
-  const applyFilters = () => {
-    onFilterChange({
-      searchQuery,
-      year,
-      budgetRange,
-      sleepSchedule,
-      cleanliness,
-      moveInDate,
-      preferences,
-      minMatchScore
-    });
-  };
-
   // Reset filters
   const resetFilters = () => {
     setSearchQuery("");
@@ -70,16 +68,6 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
     setMoveInDate("any");
     setPreferences([]);
     setMinMatchScore(0);
-    onFilterChange({
-      searchQuery: "",
-      year: "all",
-      budgetRange: [0, 2000],
-      sleepSchedule: "any",
-      cleanliness: [1, 5],
-      moveInDate: "any",
-      preferences: [],
-      minMatchScore: 0
-    });
   };
 
   return (
@@ -134,110 +122,114 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
             <Button variant="outline">
               <SlidersHorizontal className="h-4 w-4 mr-2" />
               More Filters
+              {(preferences.length > 0 || minMatchScore > 0 || budgetRange[0] !== 0 || budgetRange[1] !== 2000 || cleanliness[0] !== 1 || cleanliness[1] !== 5 || moveInDate !== 'any') && (
+                <span className="ml-2 bg-blue-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                  {preferences.length + (minMatchScore > 0 ? 1 : 0) + (budgetRange[0] !== 0 || budgetRange[1] !== 2000 ? 1 : 0) + (cleanliness[0] !== 1 || cleanliness[1] !== 5 ? 1 : 0) + (moveInDate !== 'any' ? 1 : 0)}
+                </span>
+              )}
             </Button>
           </SheetTrigger>
-          <SheetContent className="overflow-y-auto">
-            <SheetHeader>
-              <SheetTitle>Filter Preferences</SheetTitle>
-            </SheetHeader>
-            <div className="mt-6 space-y-6">
-              {/* Budget Range */}
-              <div className="space-y-4">
-                <Label className="text-base font-semibold">Budget Range</Label>
-                <div className="pt-2 px-2">
-                  <Slider 
-                    value={budgetRange}
-                    onValueChange={setBudgetRange}
-                    max={2000} 
-                    min={0} 
-                    step={50} 
-                  />
-                  <div className="flex justify-between mt-3 text-sm text-gray-600">
-                    <span>${budgetRange[0]}</span>
-                    <span>${budgetRange[1]}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Cleanliness Level */}
-              <div className="space-y-4">
-                <Label className="text-base font-semibold">Cleanliness Level</Label>
-                <div className="pt-2 px-2">
-                  <Slider 
-                    value={cleanliness}
-                    onValueChange={setCleanliness}
-                    max={5} 
-                    min={1} 
-                    step={1} 
-                  />
-                  <div className="flex justify-between mt-3 text-sm text-gray-600">
-                    <span>{cleanliness[0]} (Relaxed)</span>
-                    <span>{cleanliness[1]} (Very Clean)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Match Score */}
-              <div className="space-y-4">
-                <Label className="text-base font-semibold">
-                  Minimum Match Score: {minMatchScore}%
-                </Label>
-                <div className="pt-2 px-2">
-                  <Slider 
-                    value={[minMatchScore]}
-                    onValueChange={(value) => setMinMatchScore(value[0])}
-                    max={100} 
-                    min={0} 
-                    step={5} 
-                  />
-                </div>
-              </div>
-
-              {/* Lifestyle Preferences */}
-              <div>
-                <Label className="mb-3 text-base font-semibold">Lifestyle Preferences</Label>
-                <div className="space-y-3 mt-3">
-                  {['Clean & Organized', 'Quiet Hours', 'Non-Smoker', 'Pets Allowed', 'Guests Okay'].map((pref) => (
-                    <div key={pref} className="flex items-center space-x-2">
-                      <Checkbox 
-                        id={pref}
-                        checked={preferences.includes(pref)}
-                        onCheckedChange={() => handlePreferenceToggle(pref)}
-                      />
-                      <label htmlFor={pref} className="text-sm cursor-pointer">
-                        {pref}
-                      </label>
+          <SheetContent className="overflow-y-auto w-full sm:max-w-md p-0">
+            <div className="p-6">
+              <SheetHeader className="mb-6">
+                <SheetTitle className="text-xl">Filter Preferences</SheetTitle>
+              </SheetHeader>
+              <div className="space-y-8">
+                {/* Budget Range */}
+                <div className="space-y-4">
+                  <Label className="text-base font-semibold">Budget Range</Label>
+                  <div className="pt-2 px-2">
+                    <Slider 
+                      value={budgetRange}
+                      onValueChange={setBudgetRange}
+                      max={2000} 
+                      min={0} 
+                      step={50} 
+                    />
+                    <div className="flex justify-between mt-3 text-sm text-gray-600">
+                      <span>${budgetRange[0]}/mo</span>
+                      <span>${budgetRange[1]}/mo</span>
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Move-in Timeline */}
-              <div>
-                <Label className="mb-3 text-base font-semibold">Move-in Timeline</Label>
-                <Select value={moveInDate} onValueChange={setMoveInDate}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Any time" />
-                  </SelectTrigger>
-                  <SelectContent position="popper" className="z-[10000]">
-                    <SelectItem value="any">Any time</SelectItem>
-                    <SelectItem value="June 2025">June 2025</SelectItem>
-                    <SelectItem value="July 2025">July 2025</SelectItem>
-                    <SelectItem value="August 2025">August 2025</SelectItem>
-                    <SelectItem value="September 2025">September 2025</SelectItem>
-                    <SelectItem value="Flexible">Flexible</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+                {/* Cleanliness Level */}
+                <div className="space-y-4">
+                  <Label className="text-base font-semibold">Cleanliness Level</Label>
+                  <div className="pt-2 px-2">
+                    <Slider 
+                      value={cleanliness}
+                      onValueChange={setCleanliness}
+                      max={5} 
+                      min={1} 
+                      step={1} 
+                    />
+                    <div className="flex justify-between mt-3 text-sm text-gray-600">
+                      <span>{cleanliness[0]} (Relaxed)</span>
+                      <span>{cleanliness[1]} (Very Clean)</span>
+                    </div>
+                  </div>
+                </div>
 
-              {/* Buttons */}
-              <div className="space-y-2 pt-4">
-                <Button variant="outline" className="w-full" onClick={resetFilters}>
-                  Reset Filters
-                </Button>
-                <Button className="w-full" onClick={applyFilters}>
-                  Apply Filters
-                </Button>
+                {/* Match Score */}
+                <div className="space-y-4">
+                  <Label className="text-base font-semibold">
+                    Minimum Match Score: {minMatchScore}%
+                  </Label>
+                  <div className="pt-2 px-2">
+                    <Slider 
+                      value={[minMatchScore]}
+                      onValueChange={(value) => setMinMatchScore(value[0])}
+                      max={100} 
+                      min={0} 
+                      step={5} 
+                    />
+                  </div>
+                </div>
+
+                {/* Lifestyle Preferences */}
+                <div className="space-y-4">
+                  <Label className="text-base font-semibold">Lifestyle Preferences</Label>
+                  <div className="space-y-3">
+                    {['Clean & Organized', 'Quiet Hours', 'Non-Smoker', 'Pets Allowed', 'Guests Okay'].map((pref) => (
+                      <div key={pref} className="flex items-center space-x-3">
+                        <Checkbox 
+                          id={pref}
+                          checked={preferences.includes(pref)}
+                          onCheckedChange={() => handlePreferenceToggle(pref)}
+                        />
+                        <label htmlFor={pref} className="text-sm cursor-pointer">
+                          {pref}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Move-in Timeline */}
+                <div className="space-y-4">
+                  <Label className="text-base font-semibold">Move-in Timeline</Label>
+                  <Select value={moveInDate} onValueChange={setMoveInDate}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Any time" />
+                    </SelectTrigger>
+                    <SelectContent position="popper" className="z-[10000]">
+                      <SelectItem value="any">Any time</SelectItem>
+                      <SelectItem value="June 2025">June 2025</SelectItem>
+                      <SelectItem value="July 2025">July 2025</SelectItem>
+                      <SelectItem value="August 2025">August 2025</SelectItem>
+                      <SelectItem value="September 2025">September 2025</SelectItem>
+                      <SelectItem value="Flexible">Flexible</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Reset Button */}
+                <div className="pt-4">
+                  <Button variant="outline" className="w-full" onClick={resetFilters}>
+                    Reset All Filters
+                  </Button>
+                </div>
               </div>
             </div>
           </SheetContent>
@@ -245,7 +237,7 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
       </div>
 
       {/* Active Filters Display */}
-      {(searchQuery || year !== 'all' || sleepSchedule !== 'any' || preferences.length > 0 || minMatchScore > 0) && (
+      {(searchQuery || year !== 'all' || sleepSchedule !== 'any' || preferences.length > 0 || minMatchScore > 0 || budgetRange[0] !== 0 || budgetRange[1] !== 2000 || cleanliness[0] !== 1 || cleanliness[1] !== 5 || moveInDate !== 'any') && (
         <div className="flex flex-wrap gap-2 mt-4">
           <span className="text-sm text-gray-600">Active filters:</span>
           
@@ -278,6 +270,42 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
               {sleepSchedule.replace('-', ' ')}
               <button 
                 onClick={() => setSleepSchedule("any")}
+                className="ml-2"
+              >
+                ×
+              </button>
+            </Badge>
+          )}
+
+          {(budgetRange[0] !== 0 || budgetRange[1] !== 2000) && (
+            <Badge variant="secondary">
+              Budget: ${budgetRange[0]}-${budgetRange[1]}
+              <button 
+                onClick={() => setBudgetRange([0, 2000])}
+                className="ml-2"
+              >
+                ×
+              </button>
+            </Badge>
+          )}
+
+          {(cleanliness[0] !== 1 || cleanliness[1] !== 5) && (
+            <Badge variant="secondary">
+              Cleanliness: {cleanliness[0]}-{cleanliness[1]}
+              <button 
+                onClick={() => setCleanliness([1, 5])}
+                className="ml-2"
+              >
+                ×
+              </button>
+            </Badge>
+          )}
+
+          {moveInDate !== 'any' && (
+            <Badge variant="secondary">
+              Move-in: {moveInDate}
+              <button 
+                onClick={() => setMoveInDate("any")}
                 className="ml-2"
               >
                 ×
