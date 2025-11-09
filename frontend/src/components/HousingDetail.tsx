@@ -60,7 +60,7 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-gray-700">
                     <DollarSign className="h-4 w-4 text-gray-400" />
-                    <span>${housing.price} per month</span>
+                    <span>{housing.price} per month</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-700">
                     <Home className="h-4 w-4 text-gray-400" />

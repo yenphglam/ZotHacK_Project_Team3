@@ -86,7 +86,7 @@ export function Header({ activeTab, onTabChange, onProfileClick }: HeaderProps) 
                 style={activeTab === 'guide' ? { color: 'rgb(17, 63, 103)' } : {}}
               >
                 <BookOpen className="h-4 w-4" />
-                Housing Guide
+                UCI Housing Assistant Chatbot
               </button>
             </nav>
 

@@ -36,7 +36,9 @@ export function HousingCard({ housing, onClick }: HousingCardProps) {
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-2 mb-2">
           <h3>{housing.title}</h3>
-          <span className="text-blue-600">${housing.price}/mo</span>
+          <p className="text-l" style={{ color: 'rgb(17, 63, 103)' }}>
+            {housing.price}
+          </p>
         </div>
         
         <div className="flex items-center gap-1 text-gray-600 text-sm mb-3">
