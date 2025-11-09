@@ -1,28 +1,50 @@
 import { Home, Users, BookOpen, User } from "lucide-react";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SignInDialog } from "./SignInDialog";
-import { ProfileForm } from "./ProfileForm";
+import { auth, signOutUser, getUserProfile } from "../lib/firebase";
 
 interface HeaderProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  onProfileClick?: () => void;
 }
 
-export function Header({ activeTab, onTabChange }: HeaderProps) {
+export function Header({ activeTab, onTabChange, onProfileClick }: HeaderProps) {
   const [signInOpen, setSignInOpen] = useState(false);
-  const [profileFormOpen, setProfileFormOpen] = useState(false);
-  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
-  const handleSignInSuccess = () => {
+  // Listen to Firebase auth state
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleSignInSuccess = async () => {
     setSignInOpen(false);
-    setProfileFormOpen(true);
+    
+    // Check if user already has a profile
+    const user = auth.currentUser;
+    if (user) {
+      const profileResult = await getUserProfile(user.uid);
+      
+      if (profileResult.success) {
+        console.log("✅ Existing user signed in, profile exists");
+      } else {
+        console.log("🆕 New user signed in, showing profile form");
+      }
+    }
   };
 
-  const handleProfileComplete = (profileData: any) => {
-    console.log("Profile completed:", profileData);
-    setProfileFormOpen(false);
-    setIsSignedIn(true);
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+      setUser(null);
+    } catch (error) {
+      console.error("Sign out error:", error);
+    }
   };
 
   return (
@@ -32,7 +54,7 @@ export function Header({ activeTab, onTabChange }: HeaderProps) {
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-2">
               <Home className="h-6 w-6 text-blue-600" />
-              <span className="text-xl">ZotHomes</span>
+              <span className="text-xl font-bold">ZotHomes</span>
             </div>
             
             <nav className="hidden md:flex items-center gap-6">
@@ -66,18 +88,28 @@ export function Header({ activeTab, onTabChange }: HeaderProps) {
             </nav>
 
             <div className="flex items-center gap-3">
-              {!isSignedIn ? (
-                <>
-                  <Button variant="ghost" size="sm" onClick={() => setSignInOpen(true)}>
-                    <User className="h-4 w-4 mr-2" />
-                    Sign In
-                  </Button>
-                </>
-              ) : (
-                <Button variant="ghost" size="sm">
+              {!user ? (
+                <Button variant="ghost" size="sm" onClick={() => setSignInOpen(true)}>
                   <User className="h-4 w-4 mr-2" />
-                  My Profile
+                  Sign In
                 </Button>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => {
+                      console.log("🖱️ My Profile clicked!");
+                      onProfileClick?.();
+                    }}
+                  >
+                    <User className="h-4 w-4 mr-2" />
+                    My Profile
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={handleSignOut}>
+                    Sign Out
+                  </Button>
+                </div>
               )}
             </div>
           </div>
@@ -88,12 +120,6 @@ export function Header({ activeTab, onTabChange }: HeaderProps) {
         open={signInOpen}
         onClose={() => setSignInOpen(false)}
         onSignInSuccess={handleSignInSuccess}
-      />
-      
-      <ProfileForm
-        open={profileFormOpen}
-        onClose={() => setProfileFormOpen(false)}
-        onComplete={handleProfileComplete}
       />
     </>
   );

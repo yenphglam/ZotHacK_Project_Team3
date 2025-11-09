@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 import {
   Dialog,
   DialogContent,
@@ -21,7 +22,7 @@ import { Slider } from "./ui/slider";
 import { Badge } from "./ui/badge";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Loader2 } from "lucide-react";
-import { saveUserProfile } from "../lib/firebase";
+import { saveUserProfile, getUserProfile } from "../lib/firebase";
 import { auth } from "../lib/firebase";
 
 export function ProfileForm({ open, onClose, onComplete }) {
@@ -47,8 +48,92 @@ export function ProfileForm({ open, onClose, onComplete }) {
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [loadingProfile, setLoadingProfile] = useState(false);
+  const [hasExistingProfile, setHasExistingProfile] = useState(false);
 
-  const interestOptions = [
+  // Load existing profile data when dialog opens
+useEffect(() => {
+  const loadProfile = async () => {
+    if (!open) return; // Only run when dialog is open
+    
+    setLoadingProfile(true);
+    console.log("🔄 Loading profile data...");
+    
+    try {
+      const user = auth.currentUser;
+      
+      if (!user) {
+        console.log("❌ No user signed in");
+        setLoadingProfile(false);
+        return;
+      }
+
+      console.log("👤 Loading profile for:", user.email);
+      const profileResult = await getUserProfile(user.uid);
+      
+      if (profileResult.success && profileResult.data) {
+        const data = profileResult.data;
+        console.log("✅ Profile loaded:", data);
+        
+        setHasExistingProfile(true);
+        
+        // Fill form with existing data
+        setFormData({
+          name: data.name || "",
+          year: data.year || "",
+          major: data.major || "",
+          bio: data.bio || "",
+          sleepSchedule: data.sleepSchedule || "",
+          cleanliness: data.cleanliness || [3],
+          interests: data.interests || [],
+          moveInDate: data.moveInDate || "",
+          budgetMin: data.budgetMin?.toString() || "",
+          budgetMax: data.budgetMax?.toString() || "",
+          preferences: data.preferences || {
+            cleanOrganized: false,
+            quietHours: false,
+            nonSmoker: false,
+            petsAllowed: false,
+            guestsOk: false,
+          },
+        });
+      } else {
+        console.log("ℹ️ No existing profile found");
+        setHasExistingProfile(false);
+        
+        // Reset form to empty for new users
+        setFormData({
+          name: "",
+          year: "",
+          major: "",
+          bio: "",
+          sleepSchedule: "",
+          cleanliness: [3],
+          interests: [],
+          moveInDate: "",
+          budgetMin: "",
+          budgetMax: "",
+          preferences: {
+            cleanOrganized: false,
+            quietHours: false,
+            nonSmoker: false,
+            petsAllowed: false,
+            guestsOk: false,
+          },
+        });
+      }
+    } catch (err) {
+      console.error("❌ Error loading profile:", err);
+      setError("Failed to load profile data");
+    } finally {
+      setLoadingProfile(false);
+    }
+  };
+
+  loadProfile();
+}, [open]); // Run whenever dialog opens/closes
+
+const interestOptions = [
     "Coding",
     "Gaming",
     "Sports",
@@ -135,15 +220,27 @@ export function ProfileForm({ open, onClose, onComplete }) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="!fixed sm:max-w-[600px] max-h-[90vh] overflow-y-auto !left-[50%] !top-[50%] !-translate-x-1/2 !-translate-y-1/2 !z-[100]">
         <DialogHeader>
-          <DialogTitle>Complete Your Profile</DialogTitle>
+          <DialogTitle>
+            {hasExistingProfile ? "Edit Your Profile" : "Complete Your Profile"}
+          </DialogTitle>
           <DialogDescription>
             Help us find your perfect roommate match by completing your profile
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+          {/* Loading overlay while fetching profile */}
+          {loadingProfile && (
+            <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10 rounded-lg">
+              <div className="text-center">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-2" />
+                <p className="text-sm text-gray-600">Loading profile...</p>
+              </div>
+            </div>
+          )}
+
           {/* Error Message */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
@@ -546,7 +643,8 @@ export function ProfileForm({ open, onClose, onComplete }) {
                 !formData.moveInDate ||
                 !formData.budgetMin ||
                 !formData.budgetMax ||
-                loading
+                loading ||
+                loadingProfile
               }
             >
               {loading ? (
@@ -554,8 +652,15 @@ export function ProfileForm({ open, onClose, onComplete }) {
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Saving Profile...
                 </>
+              ) : loadingProfile ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Loading...
+                </>
+              ) : hasExistingProfile ? (
+                "Update Profile"
               ) : (
-                "Find Matches"
+                "Create Profile"
               )}
             </Button>
             <p className="text-xs text-gray-500 text-center">

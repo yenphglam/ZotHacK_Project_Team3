@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "./components/Header";
 import { HousingCard, Housing } from "./components/HousingCard";
 import { RoommateCard, Roommate } from "./components/RoommateCard";
@@ -6,13 +6,54 @@ import { HousingFilters } from "./components/HousingFilters";
 import { RoommateFilters } from "./components/RoommateFilters";
 import { HousingGuide } from "./components/HousingGuide";
 import { HousingDetail } from "./components/HousingDetail";
+import { ProfileForm } from "./components/ProfileForm";
 import { Button } from "./components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
+import { useMatchedRoommates } from "./hooks/useMatchedRoommates";
+import { auth } from "./lib/firebase";
+import { getUserProfile } from "./lib/firebase";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>("housing");
   const [selectedHousing, setSelectedHousing] = useState<Housing | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+
+  // ADD THESE NEW LINES:
+  const [user, setUser] = useState<any>(null);
+  const [hasProfile, setHasProfile] = useState(false);
+  const [profileFormOpen, setProfileFormOpen] = useState(false);
+
+  // Fetch roommates from Firebase
+  const { matches, loading: roommatesLoading, error: roommatesError } = useMatchedRoommates();
+
+  // Check if user is signed in and has a profile
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      setUser(user);
+      
+      if (user) {
+        // Check if user has a profile
+        const profileResult = await getUserProfile(user.uid);
+        
+        if (profileResult.success) {
+          // User HAS a profile - don't show form
+          setHasProfile(true);
+          setProfileFormOpen(false);
+          console.log("✅ User has existing profile, skipping form");
+        } else {
+          // User DOESN'T have a profile - show form
+          setHasProfile(false);
+          setProfileFormOpen(true);
+          console.log("❌ No profile found, showing form");
+        }
+      } else {
+        setHasProfile(false);
+        setProfileFormOpen(false);
+      }
+    });
+
+    return () => unsubscribe();
+}, []);
 
   // UC Irvine specific housing options
   const mockHousingData: Housing[] = [
@@ -174,130 +215,24 @@ export default function App() {
     }
   ];
 
-  // UCI Students looking for roommates
-  const mockRoommateData: Roommate[] = [
-    {
-      id: "1",
-      name: "Sarah Johnson",
-      age: 20,
-      major: "Computer Science",
-      year: "Junior",
-      bio: "UCI CS major looking for a clean, organized roommate near campus. I'm friendly but appreciate personal space, especially during finals.",
-      budget: "$700-900/month",
-      moveInDate: "August 2025",
-      preferences: ["Clean & Organized", "Quiet Hours", "Non-Smoker"],
-      interests: ["Coding", "Hiking", "Boba runs"],
-      verified: true,
-      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwc3R1ZGVudHMlMjBzdHVkeWluZ3xlbnwxfHx8fDE3NjI1MDU4ODd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-    },
-    {
-      id: "2",
-      name: "Michael Chen",
-      age: 21,
-      major: "Business Economics",
-      year: "Senior",
-      bio: "Looking for roommate in UTC area. Love cooking Asian food and hosting small gatherings. Respectful of study time and boundaries.",
-      budget: "$800-1100/month",
-      moveInDate: "July 2025",
-      preferences: ["Social & Friendly", "Shared Cooking", "Pet-Friendly"],
-      interests: ["Gaming", "Cooking", "Basketball at ARC"],
-      verified: true,
-      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwc3R1ZGVudHMlMjBzdHVkeWluZ3xlbnwxfHx8fDE3NjI1MDU4ODd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-    },
-    {
-      id: "3",
-      name: "Emily Rodriguez",
-      age: 19,
-      major: "Biological Sciences",
-      year: "Sophomore",
-      bio: "Pre-med Anteater looking for roommate at Campus Village or Arroyo Vista. Early bird who studies a lot but loves weekend beach trips to Newport.",
-      budget: "$600-850/month",
-      moveInDate: "August 2025",
-      preferences: ["Early Riser", "Clean & Organized", "Quiet Hours"],
-      interests: ["Yoga", "Running", "Beach walks"],
-      verified: true,
-      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwc3R1ZGVudHMlMjBzdHVkeWluZ3xlbnwxfHx8fDE3NjI1MDU4ODd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-    },
-    {
-      id: "4",
-      name: "David Kim",
-      age: 22,
-      major: "Electrical Engineering",
-      year: "Graduate",
-      bio: "Grad student at UCI looking for mature roommate near campus. Working on research projects but enjoy good coffee talks at Anteatery.",
-      budget: "$900-1200/month",
-      moveInDate: "September 2025",
-      preferences: ["Quiet Hours", "Non-Smoker", "Clean & Organized"],
-      interests: ["Photography", "Coffee", "Tech meetups"],
-      verified: true,
-      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwc3R1ZGVudHMlMjBzdHVkeWluZ3xlbnwxfHx8fDE3NjI1MDU4ODd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-    },
-    {
-      id: "5",
-      name: "Jessica Martinez",
-      age: 20,
-      major: "Psychology",
-      year: "Junior",
-      bio: "Looking for roommate at Verano Place or nearby. Love decorating and making our place cozy. Down for Trader Joe's runs and exploring Irvine.",
-      budget: "$700-950/month",
-      moveInDate: "June 2025",
-      preferences: ["Social & Friendly", "Pet-Friendly", "Shared Cooking"],
-      interests: ["Plants", "Art", "Exploring OC"],
-      verified: false,
-      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwc3R1ZGVudHMlMjBzdHVkeWluZ3xlbnwxfHx8fDE3NjI1MDU4ODd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-    },
-    {
-      id: "6",
-      name: "Alex Thompson",
-      age: 21,
-      major: "Film & Media Studies",
-      year: "Senior",
-      bio: "UCI senior looking for chill roommate. I edit videos late but always use headphones. Love exploring LA on weekends.",
-      budget: "$800-1100/month",
-      moveInDate: "August 2025",
-      preferences: ["Flexible Hours", "Social & Friendly", "Non-Smoker"],
-      interests: ["Video Production", "Photography", "Movies"],
-      verified: true,
-      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwc3R1ZGVudHMlMjBzdHVkeWluZ3xlbnwxfHx8fDE3NjI1MDU4ODd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-    },
-    {
-      id: "7",
-      name: "Priya Patel",
-      age: 20,
-      major: "Data Science",
-      year: "Junior",
-      bio: "Data Science major seeking roommate for fall. Organized and friendly. Love working on projects at Langson Library and trying new restaurants in Irvine.",
-      budget: "$750-1000/month",
-      moveInDate: "September 2025",
-      preferences: ["Clean & Organized", "Social & Friendly", "Non-Smoker"],
-      interests: ["Data viz", "Food", "Volleyball"],
-      verified: true,
-      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwc3R1ZGVudHMlMjBzdHVkeWluZ3xlbnwxfHx8fDE3NjI1MDU4ODd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-    },
-    {
-      id: "8",
-      name: "Ryan Martinez",
-      age: 19,
-      major: "Mechanical Engineering",
-      year: "Sophomore",
-      bio: "Engineering student looking for roommate near UTC. Into gym, gaming, and weekend trips. Clean and respectful, looking for same.",
-      budget: "$700-950/month",
-      moveInDate: "August 2025",
-      preferences: ["Clean & Organized", "Gym Buddy", "Non-Smoker"],
-      interests: ["Weightlifting", "Gaming", "Cars"],
-      verified: true,
-      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwc3R1ZGVudHMlMjBzdHVkeWluZ3xlbnwxfHx8fDE3NjI1MDU4ODd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-    }
-  ];
-
   const handleHousingClick = (housing: Housing) => {
     setSelectedHousing(housing);
     setDetailOpen(true);
   };
 
+  const handleProfileComplete = () => {
+    setHasProfile(true);
+    setProfileFormOpen(false);
+    setActiveTab("roommates");
+  };
+
   return (
     <div className="min-h-screen bg-white">
-      <Header activeTab={activeTab} onTabChange={setActiveTab} />
+      <Header 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab}
+        onProfileClick={() => setProfileFormOpen(true)}
+      />
 
       {/* Hero Section */}
       {activeTab === "housing" && (
@@ -350,21 +285,80 @@ export default function App() {
             <div className="mb-8">
               <h2 className="mb-2">Find Your Perfect Roommate</h2>
               <p className="text-gray-600">
-                Connect with fellow students looking for compatible living situations
+                Connect with fellow UCI students looking for compatible living situations
               </p>
             </div>
 
-            <RoommateFilters onFilterChange={() => {}} />
+            {/* Show message if not signed in */}
+            {!user && (
+              <div className="text-center py-12 bg-blue-50 rounded-lg">
+                <p className="text-gray-700 mb-4 text-lg">
+                  Sign in to view and connect with potential roommates
+                </p>
+                <p className="text-sm text-gray-500">
+                  Use your UCI Google account to get started
+                </p>
+              </div>
+            )}
 
-            <div className="mb-6">
-              <p className="text-gray-600">{mockRoommateData.length} profiles available</p>
-            </div>
+            {/* Show message if no profile */}
+            {user && !hasProfile && (
+              <div className="text-center py-12 bg-yellow-50 rounded-lg">
+                <p className="text-gray-700 mb-4 text-lg">
+                  Complete your profile to find compatible roommates
+                </p>
+                <Button onClick={() => setProfileFormOpen(true)}>
+                  Complete Profile
+                </Button>
+              </div>
+            )}
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockRoommateData.map((roommate) => (
-                <RoommateCard key={roommate.id} roommate={roommate} />
-              ))}
-            </div>
+            {/* Show loading state */}
+            {user && hasProfile && roommatesLoading && (
+              <div className="flex items-center justify-center min-h-[400px]">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                <span className="ml-3 text-gray-600">Finding your perfect matches...</span>
+              </div>
+            )}
+
+            {/* Show error state */}
+            {user && hasProfile && roommatesError && (
+              <div className="text-center py-12">
+                <p className="text-red-600">Error loading roommates: {roommatesError}</p>
+              </div>
+            )}
+
+            {/* Show roommates from Firebase */}
+            {user && hasProfile && !roommatesLoading && !roommatesError && (
+              <>
+                <RoommateFilters onFilterChange={() => {}} />
+
+                {matches.length === 0 ? (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <p className="text-gray-600 mb-4 text-lg">
+                      No roommate matches found yet.
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Check back soon as more students join!
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="mb-6">
+                      <p className="text-gray-600">
+                        {matches.length} compatible roommate{matches.length !== 1 ? 's' : ''} found
+                      </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {matches.map((roommate) => (
+                        <RoommateCard key={roommate.id} roommate={roommate} />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </>
+            )}
           </div>
         )}
 
@@ -376,6 +370,13 @@ export default function App() {
         open={detailOpen}
         onClose={() => setDetailOpen(false)}
       />
+
+      <ProfileForm
+        open={profileFormOpen}
+        onClose={() => setProfileFormOpen(false)}
+        onComplete={handleProfileComplete}
+      />
     </div>
+
   );
 }
