@@ -1,4 +1,5 @@
-import { Search, SlidersHorizontal } from "lucide-react";
+import { useState } from "react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
@@ -6,12 +7,14 @@ import { Slider } from "./ui/slider";
 import { Label } from "./ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Checkbox } from "./ui/checkbox";
+
 import { Badge } from "./ui/badge";
 import { useState, useEffect } from "react";
 
 interface HousingFiltersProps {
   onFilterChange: (filters: any) => void;
 }
+
 
 export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
   // State for all filters
@@ -78,6 +81,7 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
           </div>
         </div>
 
+
         {/* Property Type */}
         <Select value={propertyType} onValueChange={setPropertyType}>
           <SelectTrigger className="w-full md:w-48">
@@ -141,6 +145,7 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
                 </div>
               </div>
 
+
               {/* Distance Section */}
               <div className="space-y-4">
                 <Label className="text-base font-semibold">Distance from Campus</Label>
@@ -157,6 +162,7 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
                   </SelectContent>
                 </Select>
               </div>
+
 
               {/* Amenities Section */}
               <div className="space-y-4">
