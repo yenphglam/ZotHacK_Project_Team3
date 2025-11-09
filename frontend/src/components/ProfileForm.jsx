@@ -20,6 +20,9 @@ import {
 import { Slider } from "./ui/slider";
 import { Badge } from "./ui/badge";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { Loader2 } from "lucide-react";
+import { saveUserProfile } from "../lib/firebase";
+import { auth } from "../lib/firebase";
 
 export function ProfileForm({ open, onClose, onComplete }) {
   const [formData, setFormData] = useState({
@@ -29,6 +32,9 @@ export function ProfileForm({ open, onClose, onComplete }) {
     cleanliness: [3],
     interests: [],
   });
+  
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const interestOptions = [
     "Coding",
@@ -58,10 +64,46 @@ export function ProfileForm({ open, onClose, onComplete }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Profile data:", formData);
-    onComplete(formData);
+    setError("");
+    setLoading(true);
+
+    try {
+      // Get current user
+      const user = auth.currentUser;
+      
+      if (!user) {
+        throw new Error("You must be signed in to save your profile");
+      }
+
+      // Prepare data to save
+      const profileData = {
+        name: formData.name,
+        email: user.email,
+        photoURL: user.photoURL,
+        year: formData.year,
+        sleepSchedule: formData.sleepSchedule,
+        cleanliness: formData.cleanliness,
+        interests: formData.interests,
+      };
+
+      // Save to Firestore
+      await saveUserProfile(user.uid, profileData);
+
+      console.log("Profile saved successfully!");
+      
+      // Call the onComplete callback
+      onComplete(profileData);
+      
+      // Close the dialog
+      onClose();
+    } catch (err) {
+      console.error("Error saving profile:", err);
+      setError(err.message || "Failed to save profile. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -75,6 +117,13 @@ export function ProfileForm({ open, onClose, onComplete }) {
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
           {/* Name */}
           <div className="space-y-2">
             <Label htmlFor="name">Full Name *</Label>
@@ -86,6 +135,7 @@ export function ProfileForm({ open, onClose, onComplete }) {
                 setFormData({ ...formData, name: e.target.value })
               }
               required
+              disabled={loading}
             />
           </div>
 
@@ -98,6 +148,7 @@ export function ProfileForm({ open, onClose, onComplete }) {
                 setFormData({ ...formData, year: value })
               }
               required
+              disabled={loading}
             >
               <SelectTrigger id="year">
                 <SelectValue placeholder="Select your year" />
@@ -122,6 +173,7 @@ export function ProfileForm({ open, onClose, onComplete }) {
                 setFormData({ ...formData, sleepSchedule: value })
               }
               required
+              disabled={loading}
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="early-bird" id="early-bird" />
@@ -168,6 +220,7 @@ export function ProfileForm({ open, onClose, onComplete }) {
                 max={5}
                 step={1}
                 className="w-full"
+                disabled={loading}
               />
               <div className="flex justify-between text-xs text-gray-500 mt-2">
                 <span>Relaxed</span>
@@ -187,6 +240,7 @@ export function ProfileForm({ open, onClose, onComplete }) {
                     id={interest}
                     checked={formData.interests.includes(interest)}
                     onCheckedChange={() => handleInterestToggle(interest)}
+                    disabled={loading}
                   />
                   <Label
                     htmlFor={interest}
@@ -217,10 +271,18 @@ export function ProfileForm({ open, onClose, onComplete }) {
               disabled={
                 !formData.name ||
                 !formData.year ||
-                !formData.sleepSchedule
+                !formData.sleepSchedule ||
+                loading
               }
             >
-              Find Matches
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving Profile...
+                </>
+              ) : (
+                "Find Matches"
+              )}
             </Button>
             <p className="text-xs text-gray-500 text-center">
               You can update your profile anytime from your account settings

@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -16,6 +17,9 @@ const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase Authentication
 export const auth = getAuth(app);
+
+// Initialize Firestore
+export const db = getFirestore(app);
 
 // Configure Google Provider
 export const googleProvider = new GoogleAuthProvider();
@@ -76,6 +80,116 @@ export const signOutUser = async () => {
     localStorage.removeItem('id_token');
   } catch (error) {
     console.error('Sign out error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Save user profile to Firestore
+ * @param {string} userId - The user's UID
+ * @param {object} profileData - The profile data to save
+ */
+export const saveUserProfile = async (userId, profileData) => {
+  try {
+    const userRef = doc(db, 'users', userId);
+    
+    const dataToSave = {
+      ...profileData,
+      updatedAt: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+    };
+    
+    await setDoc(userRef, dataToSave, { merge: true });
+    
+    console.log('Profile saved successfully!');
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving profile:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get user profile from Firestore
+ * @param {string} userId - The user's UID
+ */
+export const getUserProfile = async (userId) => {
+  try {
+    const userRef = doc(db, 'users', userId);
+    const userSnap = await getDoc(userRef);
+    
+    if (userSnap.exists()) {
+      return { success: true, data: userSnap.data() };
+    } else {
+      return { success: false, error: 'Profile not found' };
+    }
+  } catch (error) {
+    console.error('Error getting profile:', error);
+    throw error;
+  }
+};
+
+/**
+ * Find potential roommate matches based on profile
+ * @param {string} currentUserId - Current user's UID
+ * @param {object} userProfile - Current user's profile data
+ */
+export const findRoommateMatches = async (currentUserId, userProfile) => {
+  try {
+    const usersRef = collection(db, 'users');
+    
+    // Query for users with similar year
+    const q = query(
+      usersRef,
+      where('year', '==', userProfile.year)
+    );
+    
+    const querySnapshot = await getDocs(q);
+    const matches = [];
+    
+    querySnapshot.forEach((doc) => {
+      // Don't include current user
+      if (doc.id !== currentUserId) {
+        matches.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      }
+    });
+    
+    // Calculate match scores (simple algorithm)
+    const scoredMatches = matches.map(match => {
+      let score = 0;
+      
+      // Same sleep schedule: +30 points
+      if (match.sleepSchedule === userProfile.sleepSchedule) {
+        score += 30;
+      }
+      
+      // Similar cleanliness (within 1 level): +20 points
+      if (Math.abs(match.cleanliness[0] - userProfile.cleanliness[0]) <= 1) {
+        score += 20;
+      }
+      
+      // Shared interests: +5 points per interest
+      const sharedInterests = match.interests?.filter(
+        interest => userProfile.interests?.includes(interest)
+      ) || [];
+      score += sharedInterests.length * 5;
+      
+      return {
+        ...match,
+        matchScore: score,
+        sharedInterests
+      };
+    });
+    
+    // Sort by match score (highest first)
+    scoredMatches.sort((a, b) => b.matchScore - a.matchScore);
+    
+    return { success: true, matches: scoredMatches };
+  } catch (error) {
+    console.error('Error finding matches:', error);
     throw error;
   }
 };
