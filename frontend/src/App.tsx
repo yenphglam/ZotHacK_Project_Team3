@@ -225,6 +225,85 @@ export default function App() {
     }
   ];
 
+  const [filteredHousing, setFilteredHousing] = useState<Housing[]>(mockHousingData);
+
+  const handleFilterChange = (filters: any) => {
+    console.log('🔍 Applying filters:', filters);
+    
+    let filtered = mockHousingData;
+
+    // Search query - search in title, address, and amenities
+    if (filters.searchQuery && filters.searchQuery.trim() !== '') {
+      const query = filters.searchQuery.toLowerCase();
+      filtered = filtered.filter(housing => 
+        housing.title.toLowerCase().includes(query) ||
+        housing.address.toLowerCase().includes(query) ||
+        housing.amenities.some(a => a.toLowerCase().includes(query))
+      );
+    }
+
+    // Property type
+    if (filters.propertyType && filters.propertyType !== 'all') {
+      filtered = filtered.filter(housing => housing.type === filters.propertyType);
+    }
+
+    // Bedrooms
+    if (filters.bedrooms && filters.bedrooms !== 'any') {
+      const bedroomCount = parseInt(filters.bedrooms);
+      if (bedroomCount === 3) {
+        // 3+ bedrooms
+        filtered = filtered.filter(housing => housing.bedrooms >= 3);
+      } else {
+        filtered = filtered.filter(housing => housing.bedrooms === bedroomCount);
+      }
+    }
+
+    // Price range
+    if (filters.priceRange && filters.priceRange.length === 2) {
+      filtered = filtered.filter(housing => 
+        housing.price >= filters.priceRange[0] && 
+        housing.price <= filters.priceRange[1]
+      );
+    }
+
+    // Distance
+    if (filters.distance && filters.distance !== 'any') {
+      filtered = filtered.filter(housing => {
+        const distance = housing.distance.toLowerCase();
+        
+        if (filters.distance === 'walking') {
+          return distance.includes('on campus') || distance.includes('0.') || distance === 'on campus';
+        } else if (filters.distance === '1mi') {
+          return distance.includes('on campus') || 
+                (distance.includes('mi') && parseFloat(distance) <= 1);
+        } else if (filters.distance === '3mi') {
+          return distance.includes('on campus') || 
+                (distance.includes('mi') && parseFloat(distance) <= 3);
+        } else if (filters.distance === '5mi') {
+          return distance.includes('on campus') || 
+                (distance.includes('mi') && parseFloat(distance) <= 5);
+        }
+        
+        return true;
+      });
+    }
+
+    // Amenities - housing must have ALL selected amenities
+    if (filters.amenities && filters.amenities.length > 0) {
+      filtered = filtered.filter(housing => 
+        filters.amenities.every((amenity: string) => 
+          housing.amenities.some(a => 
+            a.toLowerCase().includes(amenity.toLowerCase()) ||
+            amenity.toLowerCase().includes(a.toLowerCase())
+          )
+        )
+      );
+    }
+
+    console.log('✅ Filtered results:', filtered.length);
+    setFilteredHousing(filtered);
+  };
+
   const handleHousingClick = (housing: Housing) => {
     setSelectedHousing(housing);
     setDetailOpen(true);
@@ -271,15 +350,21 @@ export default function App() {
       <main className="container mx-auto px-4 py-8">
         {activeTab === "housing" && (
           <div className="space-y-8">
-            <HousingFilters onFilterChange={() => {}} />
+            <HousingFilters onFilterChange={handleFilterChange} />
             
             <div className="mb-8">
-              <h2 className="mb-3 text-2xl font-bold">Available Housing</h2>
-              <p className="text-gray-600 text-lg">{mockHousingData.length} listings found</p>
-            </div>
+            <h2 className="mb-3 text-2xl font-bold">Available Housing</h2>
+            <p className="text-gray-600 text-lg">{filteredHousing.length} listings found</p>
+          </div>
 
+          {filteredHousing.length === 0 ? (
+            <div className="text-center py-12 bg-gray-50 rounded-lg">
+              <p className="text-gray-600 text-lg mb-2">No housing matches your filters</p>
+              <p className="text-sm text-gray-500">Try adjusting your search criteria</p>
+            </div>
+          ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {mockHousingData.map((housing) => (
+              {filteredHousing.map((housing) => (
                 <HousingCard
                   key={housing.id}
                   housing={housing}
@@ -287,6 +372,7 @@ export default function App() {
                 />
               ))}
             </div>
+          )}
           </div>
         )}
 
