@@ -9,7 +9,7 @@ import { HousingDetail } from "./components/HousingDetail";
 import { ProfileForm } from "./components/ProfileForm";
 import { Button } from "./components/ui/button";
 import { ArrowRight, Loader2 } from "lucide-react";
-import { useMatchedRoommates } from "./hooks/useMatchedRoommates";
+import { useRoommates } from "./hooks/useRoommates";
 import { auth } from "./lib/firebase";
 import { getUserProfile } from "./lib/firebase";
 
@@ -24,10 +24,20 @@ export default function App() {
   const [profileFormOpen, setProfileFormOpen] = useState(false);
 
   // Fetch roommates from Firebase
-  const { matches, loading: roommatesLoading, error: roommatesError } = useMatchedRoommates();
+  const { roommates, loading: roommatesLoading, error: roommatesError } = useRoommates();
+
+  useEffect(() => {
+    console.log('📊 Roommates Debug:', {
+      count: roommates.length,
+      loading: roommatesLoading,
+      error: roommatesError,
+      roommates: roommates
+    });
+  }, [roommates, roommatesLoading, roommatesError]);
 
   // Check if user is signed in and has a profile
   useEffect(() => {
+
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setUser(user);
       
@@ -333,7 +343,7 @@ export default function App() {
               <>
                 <RoommateFilters onFilterChange={() => {}} />
 
-                {matches.length === 0 ? (
+                {roommates.length === 0 ? (
                   <div className="text-center py-12 bg-gray-50 rounded-lg">
                     <p className="text-gray-600 mb-4 text-lg">
                       No roommate matches found yet.
@@ -346,12 +356,12 @@ export default function App() {
                   <>
                     <div className="mb-6">
                       <p className="text-gray-600">
-                        {matches.length} compatible roommate{matches.length !== 1 ? 's' : ''} found
+                        {roommates.length} compatible roommate{roommates.length !== 1 ? 's' : ''} found
                       </p>
                     </div>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {matches.map((roommate) => (
+                      {roommates.map((roommate) => (
                         <RoommateCard key={roommate.id} roommate={roommate} />
                       ))}
                     </div>

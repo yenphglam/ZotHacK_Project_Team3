@@ -127,3 +127,9 @@
 html {
   font-size: var(--font-size);
 }
+
+/* Fix dropdowns appearing behind dialog */
+[data-radix-select-content],
+[data-radix-popper-content-wrapper] {
+  z-index: 10000 !important;
+}
