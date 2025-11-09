@@ -96,17 +96,9 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
 
               <div>
                 <h3 className="mb-2">Location</h3>
-                <p className="text-gray-700 mb-2">
+                <p className="text-gray-700">
                   {housing.distance} from main campus
                 </p>
-                <div className="bg-gray-100 rounded-lg p-4 text-center text-sm text-gray-600">
-                  Map view would appear here
-                </div>
-              </div>
-
-              <div className="space-y-3 pt-4">
-                <Button className="w-full">Schedule a Tour</Button>
-                <Button variant="outline" className="w-full">Contact Landlord</Button>
               </div>
             </div>
           </div>

@@ -86,7 +86,7 @@ export default function App() {
       available: "September 2025",
       image: "https://images.unsplash.com/photo-1563418536419-3a3ad6ef5efd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcGFydG1lbnQlMjBpbnRlcmlvciUyMG1vZGVybnxlbnwxfHx8fDE3NjI1Nzg2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["WiFi", "Parking", "Pool", "Study Rooms", "Gym Access"],
-      type: "apartment"
+      type: "Apartment"
     },
     {
       id: "2",
@@ -99,7 +99,7 @@ export default function App() {
       available: "August 2025",
       image: "https://images.unsplash.com/photo-1504390747618-f9ea2a96c487?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwZG9ybSUyMHJvb218ZW58MXx8fHwxNzYyNTU0OTI3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["Furnished", "WiFi", "Parking", "Utilities Included", "Basketball Court"],
-      type: "apartment"
+      type: "Apartment"
     },
     {
       id: "3",
@@ -112,7 +112,7 @@ export default function App() {
       available: "July 2025",
       image: "https://images.unsplash.com/photo-1563418536419-3a3ad6ef5efd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcGFydG1lbnQlMjBpbnRlcmlvciUyMG1vZGVybnxlbnwxfHx8fDE3NjI1Nzg2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["WiFi", "Parking", "Pool", "Gym Access", "Laundry"],
-      type: "apartment"
+      type: "Apartment"
     },
     {
       id: "4",
@@ -125,7 +125,7 @@ export default function App() {
       available: "September 2025",
       image: "https://images.unsplash.com/photo-1563418536419-3a3ad6ef5efd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcGFydG1lbnQlMjBpbnRlcmlvciUyMG1vZGVybnxlbnwxfHx8fDE3NjI1Nzg2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["WiFi", "Parking", "Pool", "Gym", "Near Shopping"],
-      type: "apartment"
+      type: "Apartment"
     },
     {
       id: "5",
@@ -138,7 +138,7 @@ export default function App() {
       available: "August 2025",
       image: "https://images.unsplash.com/photo-1504390747618-f9ea2a96c487?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwZG9ybSUyMHJvb218ZW58MXx8fHwxNzYyNTU0OTI3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["WiFi", "Parking", "Pool", "Laundry", "Pet-Friendly"],
-      type: "apartment"
+      type: "Apartment"
     },
     {
       id: "6",
@@ -151,7 +151,7 @@ export default function App() {
       available: "June 2025",
       image: "https://images.unsplash.com/photo-1563418536419-3a3ad6ef5efd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcGFydG1lbnQlMjBpbnRlcmlvciUyMG1vZGVybnxlbnwxfHx8fDE3NjI1Nzg2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["WiFi", "Parking", "Pool", "Gym Access"],
-      type: "apartment"
+      type: "Apartment"
     },
     {
       id: "7",
@@ -164,7 +164,7 @@ export default function App() {
       available: "August 2025",
       image: "https://images.unsplash.com/photo-1504390747618-f9ea2a96c487?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwZG9ybSUyMHJvb218ZW58MXx8fHwxNzYyNTU0OTI3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["WiFi", "Parking", "Pool", "Gym", "Near Beach"],
-      type: "apartment"
+      type: "Apartment"
     },
     {
       id: "8",
@@ -177,7 +177,7 @@ export default function App() {
       available: "July 2025",
       image: "https://images.unsplash.com/photo-1563418536419-3a3ad6ef5efd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcGFydG1lbnQlMjBpbnRlcmlvciUyMG1vZGVybnxlbnwxfHx8fDE3NjI1Nzg2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["WiFi", "Parking", "Laundry", "Pet-Friendly"],
-      type: "house"
+      type: "House"
     },
     {
       id: "9",
@@ -190,7 +190,7 @@ export default function App() {
       available: "September 2025",
       image: "https://images.unsplash.com/photo-1504390747618-f9ea2a96c487?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwZG9ybSUyMHJvb218ZW58MXx8fHwxNzYyNTU0OTI3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["WiFi", "Utilities Included", "Cafeteria Access", "Study Lounges"],
-      type: "dorm"
+      type: "Dorm"
     },
     {
       id: "10",
@@ -203,7 +203,7 @@ export default function App() {
       available: "August 2025",
       image: "https://images.unsplash.com/photo-1504390747618-f9ea2a96c487?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwZG9ybSUyMHJvb218ZW58MXx8fHwxNzYyNTU0OTI3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["WiFi", "Utilities Included", "Cafeteria Access", "Shared Lounges"],
-      type: "dorm"
+      type: "Dorm"
     },
     {
       id: "11",
@@ -216,7 +216,7 @@ export default function App() {
       available: "September 2025",
       image: "https://images.unsplash.com/photo-1563418536419-3a3ad6ef5efd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcGFydG1lbnQlMjBpbnRlcmlvciUyMG1vZGVybnxlbnwxfHx8fDE3NjI1Nzg2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["WiFi", "Parking", "Laundry", "Study Rooms"],
-      type: "apartment"
+      type: "Apartment"
     },
     {
       id: "12",
@@ -229,7 +229,7 @@ export default function App() {
       available: "July 2025",
       image: "https://images.unsplash.com/photo-1563418536419-3a3ad6ef5efd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcGFydG1lbnQlMjBpbnRlcmlvciUyMG1vZGVybnxlbnwxfHx8fDE3NjI1Nzg2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["WiFi", "Parking", "Pool", "Gym", "Concierge"],
-      type: "apartment"
+      type: "Apartment"
     }
   ];
 

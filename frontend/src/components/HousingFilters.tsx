@@ -84,11 +84,11 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
             <SelectValue placeholder="Property Type" />
           </SelectTrigger>
           <SelectContent position="popper" className="z-[10000]">
-            <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="apartment">Apartment</SelectItem>
-            <SelectItem value="house">House</SelectItem>
-            <SelectItem value="dorm">Dorm</SelectItem>
-            <SelectItem value="studio">Studio</SelectItem>
+            <SelectItem value="All">All Types</SelectItem>
+            <SelectItem value="Apartment">Apartment</SelectItem>
+            <SelectItem value="House">House</SelectItem>
+            <SelectItem value="Dorm">Dorm</SelectItem>
+            <SelectItem value="Studio">Studio</SelectItem>
           </SelectContent>
         </Select>
 

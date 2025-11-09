@@ -14,7 +14,7 @@ export interface Housing {
   available: string;
   image: string;
   amenities: string[];
-  type: "apartment" | "house" | "dorm" | "studio";
+  type: "Apartment" | "House" | "Dorm" | "Studio";
 }
 
 interface HousingCardProps {
