@@ -31,6 +31,18 @@ export function ProfileForm({ open, onClose, onComplete }) {
     sleepSchedule: "",
     cleanliness: [3],
     interests: [],
+    major: "",
+    bio: "",
+    moveInDate: "",
+    budgetMin: "",
+    budgetMax: "",
+    preferences: {
+      cleanOrganized: false,
+      quietHours: false,
+      nonSmoker: false,
+      petsAllowed: false,
+      guestsOk: false,
+    }
   });
   
   const [loading, setLoading] = useState(false);
@@ -79,13 +91,28 @@ export function ProfileForm({ open, onClose, onComplete }) {
 
       // Prepare data to save
       const profileData = {
+        // Basic info
         name: formData.name,
         email: user.email,
         photoURL: user.photoURL,
+        
+        // Academic info
         year: formData.year,
+        major: formData.major,
+        
+        // About
+        bio: formData.bio,
+        
+        // Lifestyle
         sleepSchedule: formData.sleepSchedule,
         cleanliness: formData.cleanliness,
         interests: formData.interests,
+        
+        // Housing preferences
+        moveInDate: formData.moveInDate,
+        budgetMin: parseInt(formData.budgetMin),
+        budgetMax: parseInt(formData.budgetMax),
+        preferences: formData.preferences,
       };
 
       // Save to Firestore
@@ -162,6 +189,248 @@ export function ProfileForm({ open, onClose, onComplete }) {
                 <SelectItem value="Transfer">Transfer Student</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+                    {/* Major */}
+          <div className="space-y-2">
+            <Label htmlFor="major">Major *</Label>
+            <Input
+              id="major"
+              placeholder="e.g., Computer Science, Biology, Business"
+              value={formData.major}
+              onChange={(e) =>
+                setFormData({ ...formData, major: e.target.value })
+              }
+              required
+              disabled={loading}
+            />
+          </div>
+
+          {/* Bio */}
+          <div className="space-y-2">
+            <Label htmlFor="bio">About Me *</Label>
+            <textarea
+              id="bio"
+              placeholder="Tell potential roommates about yourself... (e.g., I'm a CS major looking for a clean, organized roommate near campus. I'm friendly but appreciate personal space, especially during finals.)"
+              value={formData.bio}
+              onChange={(e) =>
+                setFormData({ ...formData, bio: e.target.value })
+              }
+              required
+              disabled={loading}
+              className="w-full min-h-[100px] px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              maxLength={500}
+            />
+            <p className="text-xs text-gray-500">
+              {formData.bio.length}/500 characters
+            </p>
+          </div>
+
+          {/* Move-in Date */}
+          <div className="space-y-2">
+            <Label htmlFor="moveInDate">Move-in Date *</Label>
+            <Select
+              value={formData.moveInDate}
+              onValueChange={(value) =>
+                setFormData({ ...formData, moveInDate: value })
+              }
+              required
+              disabled={loading}
+            >
+              <SelectTrigger id="moveInDate">
+                <SelectValue placeholder="Select move-in date" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="June 2025">June 2025</SelectItem>
+                <SelectItem value="July 2025">July 2025</SelectItem>
+                <SelectItem value="August 2025">August 2025</SelectItem>
+                <SelectItem value="September 2025">September 2025</SelectItem>
+                <SelectItem value="October 2025">October 2025</SelectItem>
+                <SelectItem value="November 2025">November 2025</SelectItem>
+                <SelectItem value="December 2025">December 2025</SelectItem>
+                <SelectItem value="January 2026">January 2026</SelectItem>
+                <SelectItem value="February 2026">February 2026</SelectItem>
+                <SelectItem value="March 2026">March 2026</SelectItem>
+                <SelectItem value="April 2026">April 2026</SelectItem>
+                <SelectItem value="May 2026">May 2026</SelectItem>
+                <SelectItem value="Flexible">Flexible</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Budget Range */}
+          <div className="space-y-2">
+            <Label>Monthly Budget Range *</Label>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="budgetMin" className="text-xs text-gray-500">
+                  Min ($)
+                </Label>
+                <Input
+                  id="budgetMin"
+                  type="number"
+                  placeholder="Min"
+                  value={formData.budgetMin}
+                  onChange={(e) =>
+                    setFormData({ ...formData, budgetMin: e.target.value })
+                  }
+                  required
+                  disabled={loading}
+                  min="0"
+                  step="50"
+                />
+              </div>
+              <div>
+                <Label htmlFor="budgetMax" className="text-xs text-gray-500">
+                  Max ($)
+                </Label>
+                <Input
+                  id="budgetMax"
+                  type="number"
+                  placeholder="Max"
+                  value={formData.budgetMax}
+                  onChange={(e) =>
+                    setFormData({ ...formData, budgetMax: e.target.value })
+                  }
+                  required
+                  disabled={loading}
+                  min="0"
+                  step="50"
+                />
+              </div>
+            </div>
+            {formData.budgetMin && formData.budgetMax && (
+              <p className="text-sm text-gray-600">
+                Budget: ${formData.budgetMin} - ${formData.budgetMax}/month
+              </p>
+            )}
+          </div>
+
+          {/* Preferences */}
+          <div className="space-y-3">
+            <Label>Roommate Preferences *</Label>
+            <div className="space-y-3 border border-gray-200 rounded-lg p-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="cleanOrganized"
+                  checked={formData.preferences.cleanOrganized}
+                  onCheckedChange={(checked) =>
+                    setFormData({
+                      ...formData,
+                      preferences: {
+                        ...formData.preferences,
+                        cleanOrganized: checked,
+                      },
+                    })
+                  }
+                  disabled={loading}
+                />
+                <Label htmlFor="cleanOrganized" className="cursor-pointer">
+                  Clean & Organized
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="quietHours"
+                  checked={formData.preferences.quietHours}
+                  onCheckedChange={(checked) =>
+                    setFormData({
+                      ...formData,
+                      preferences: {
+                        ...formData.preferences,
+                        quietHours: checked,
+                      },
+                    })
+                  }
+                  disabled={loading}
+                />
+                <Label htmlFor="quietHours" className="cursor-pointer">
+                  Quiet Hours (especially during study/finals)
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="nonSmoker"
+                  checked={formData.preferences.nonSmoker}
+                  onCheckedChange={(checked) =>
+                    setFormData({
+                      ...formData,
+                      preferences: {
+                        ...formData.preferences,
+                        nonSmoker: checked,
+                      },
+                    })
+                  }
+                  disabled={loading}
+                />
+                <Label htmlFor="nonSmoker" className="cursor-pointer">
+                  Non-Smoker
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="petsAllowed"
+                  checked={formData.preferences.petsAllowed}
+                  onCheckedChange={(checked) =>
+                    setFormData({
+                      ...formData,
+                      preferences: {
+                        ...formData.preferences,
+                        petsAllowed: checked,
+                      },
+                    })
+                  }
+                  disabled={loading}
+                />
+                <Label htmlFor="petsAllowed" className="cursor-pointer">
+                  Pets Allowed
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="guestsOk"
+                  checked={formData.preferences.guestsOk}
+                  onCheckedChange={(checked) =>
+                    setFormData({
+                      ...formData,
+                      preferences: {
+                        ...formData.preferences,
+                        guestsOk: checked,
+                      },
+                    })
+                  }
+                  disabled={loading}
+                />
+                <Label htmlFor="guestsOk" className="cursor-pointer">
+                  Guests Okay
+                </Label>
+              </div>
+            </div>
+            
+            {/* Show selected preferences */}
+            {Object.entries(formData.preferences).some(([_, value]) => value) && (
+              <div className="flex flex-wrap gap-2 mt-3">
+                {formData.preferences.cleanOrganized && (
+                  <Badge variant="secondary">Clean & Organized</Badge>
+                )}
+                {formData.preferences.quietHours && (
+                  <Badge variant="secondary">Quiet Hours</Badge>
+                )}
+                {formData.preferences.nonSmoker && (
+                  <Badge variant="secondary">Non-Smoker</Badge>
+                )}
+                {formData.preferences.petsAllowed && (
+                  <Badge variant="secondary">Pets Allowed</Badge>
+                )}
+                {formData.preferences.guestsOk && (
+                  <Badge variant="secondary">Guests Okay</Badge>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Sleep Schedule */}
@@ -271,7 +540,12 @@ export function ProfileForm({ open, onClose, onComplete }) {
               disabled={
                 !formData.name ||
                 !formData.year ||
+                !formData.major ||
+                !formData.bio ||
                 !formData.sleepSchedule ||
+                !formData.moveInDate ||
+                !formData.budgetMin ||
+                !formData.budgetMax ||
                 loading
               }
             >

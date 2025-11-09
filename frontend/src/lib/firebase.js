@@ -138,13 +138,8 @@ export const findRoommateMatches = async (currentUserId, userProfile) => {
   try {
     const usersRef = collection(db, 'users');
     
-    // Query for users with similar year
-    const q = query(
-      usersRef,
-      where('year', '==', userProfile.year)
-    );
-    
-    const querySnapshot = await getDocs(q);
+    // Get all users (we'll filter in JavaScript)
+    const querySnapshot = await getDocs(usersRef);
     const matches = [];
     
     querySnapshot.forEach((doc) => {
@@ -157,29 +152,94 @@ export const findRoommateMatches = async (currentUserId, userProfile) => {
       }
     });
     
-    // Calculate match scores (simple algorithm)
+    // Calculate match scores (improved algorithm)
     const scoredMatches = matches.map(match => {
       let score = 0;
+      const reasons = [];
       
-      // Same sleep schedule: +30 points
+      // Same year: +20 points
+      if (match.year === userProfile.year) {
+        score += 20;
+        reasons.push("Same year");
+      }
+      
+      // Same major: +15 points
+      if (match.major === userProfile.major) {
+        score += 15;
+        reasons.push("Same major");
+      }
+      
+      // Same sleep schedule: +25 points
       if (match.sleepSchedule === userProfile.sleepSchedule) {
-        score += 30;
+        score += 25;
+        reasons.push("Similar sleep schedule");
       }
       
       // Similar cleanliness (within 1 level): +20 points
-      if (Math.abs(match.cleanliness[0] - userProfile.cleanliness[0]) <= 1) {
-        score += 20;
+      if (match.cleanliness && userProfile.cleanliness) {
+        const cleanDiff = Math.abs(match.cleanliness[0] - userProfile.cleanliness[0]);
+        if (cleanDiff === 0) {
+          score += 20;
+          reasons.push("Same cleanliness level");
+        } else if (cleanDiff === 1) {
+          score += 10;
+          reasons.push("Similar cleanliness");
+        }
       }
       
-      // Shared interests: +5 points per interest
+      // Budget overlap: +30 points
+      if (match.budgetMin && match.budgetMax && userProfile.budgetMin && userProfile.budgetMax) {
+        const overlap = Math.min(match.budgetMax, userProfile.budgetMax) - 
+                       Math.max(match.budgetMin, userProfile.budgetMin);
+        if (overlap > 0) {
+          score += 30;
+          reasons.push("Budget compatible");
+        }
+      }
+      
+      // Same move-in date: +15 points
+      if (match.moveInDate === userProfile.moveInDate) {
+        score += 15;
+        reasons.push("Same move-in date");
+      }
+      
+      // Matching preferences: +10 points each
+      if (match.preferences && userProfile.preferences) {
+        if (match.preferences.cleanOrganized && userProfile.preferences.cleanOrganized) {
+          score += 10;
+          reasons.push("Both want clean & organized");
+        }
+        if (match.preferences.quietHours && userProfile.preferences.quietHours) {
+          score += 10;
+          reasons.push("Both want quiet hours");
+        }
+        if (match.preferences.nonSmoker && userProfile.preferences.nonSmoker) {
+          score += 10;
+          reasons.push("Both non-smokers");
+        }
+        if (match.preferences.petsAllowed && userProfile.preferences.petsAllowed) {
+          score += 5;
+          reasons.push("Both okay with pets");
+        }
+        if (match.preferences.guestsOk && userProfile.preferences.guestsOk) {
+          score += 5;
+          reasons.push("Both okay with guests");
+        }
+      }
+      
+      // Shared interests: +3 points per interest
       const sharedInterests = match.interests?.filter(
         interest => userProfile.interests?.includes(interest)
       ) || [];
-      score += sharedInterests.length * 5;
+      score += sharedInterests.length * 3;
+      if (sharedInterests.length > 0) {
+        reasons.push(`${sharedInterests.length} shared interests`);
+      }
       
       return {
         ...match,
         matchScore: score,
+        matchReasons: reasons,
         sharedInterests
       };
     });
