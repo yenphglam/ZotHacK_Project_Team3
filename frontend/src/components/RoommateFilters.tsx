@@ -7,7 +7,7 @@ import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { Badge } from "./ui/badge";
 import { Slider } from "./ui/slider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface RoommateFiltersProps {
   onFilterChange: (filters: any) => void;
@@ -23,6 +23,19 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
   const [moveInDate, setMoveInDate] = useState("any");
   const [preferences, setPreferences] = useState<string[]>([]);
   const [minMatchScore, setMinMatchScore] = useState(0);
+
+  useEffect(() => {
+    onFilterChange({
+      searchQuery,
+      year,
+      budgetRange,
+      sleepSchedule,
+      cleanliness,
+      moveInDate,
+      preferences,
+      minMatchScore
+    });
+  }, [searchQuery, year, budgetRange, sleepSchedule, cleanliness, moveInDate, preferences, minMatchScore]);
 
   // Handle preference toggle
   const handlePreferenceToggle = (preference: string) => {
@@ -80,19 +93,13 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
               placeholder="Search by name, major, interests..."
               className="pl-10"
               value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                applyFilters();
-              }}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
 
         {/* Year Filter */}
-        <Select value={year} onValueChange={(value) => {
-          setYear(value);
-          applyFilters();
-        }}>
+        <Select value={year} onValueChange={setYear}>
           <SelectTrigger className="w-full md:w-48">
             <SelectValue placeholder="Year" />
           </SelectTrigger>
@@ -108,10 +115,7 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
         </Select>
 
         {/* Sleep Schedule Filter */}
-        <Select value={sleepSchedule} onValueChange={(value) => {
-          setSleepSchedule(value);
-          applyFilters();
-        }}>
+        <Select value={sleepSchedule} onValueChange={setSleepSchedule}>
           <SelectTrigger className="w-full md:w-48">
             <SelectValue placeholder="Sleep Schedule" />
           </SelectTrigger>
@@ -249,10 +253,7 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
             <Badge variant="secondary">
               Search: {searchQuery}
               <button 
-                onClick={() => {
-                  setSearchQuery("");
-                  applyFilters();
-                }}
+                onClick={() => setSearchQuery("")}
                 className="ml-2"
               >
                 ×
@@ -264,10 +265,7 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
             <Badge variant="secondary">
               {year}
               <button 
-                onClick={() => {
-                  setYear("all");
-                  applyFilters();
-                }}
+                onClick={() => setYear("all")}
                 className="ml-2"
               >
                 ×
@@ -279,10 +277,7 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
             <Badge variant="secondary">
               {sleepSchedule.replace('-', ' ')}
               <button 
-                onClick={() => {
-                  setSleepSchedule("any");
-                  applyFilters();
-                }}
+                onClick={() => setSleepSchedule("any")}
                 className="ml-2"
               >
                 ×
@@ -294,10 +289,7 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
             <Badge variant="secondary">
               Match: {minMatchScore}%+
               <button 
-                onClick={() => {
-                  setMinMatchScore(0);
-                  applyFilters();
-                }}
+                onClick={() => setMinMatchScore(0)}
                 className="ml-2"
               >
                 ×
@@ -309,16 +301,14 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
             <Badge key={pref} variant="secondary">
               {pref}
               <button 
-                onClick={() => {
-                  handlePreferenceToggle(pref);
-                  applyFilters();
-                }}
+                onClick={() => handlePreferenceToggle(pref)}
                 className="ml-2"
               >
                 ×
               </button>
             </Badge>
           ))}
+          
         </div>
       )}
     </div>
