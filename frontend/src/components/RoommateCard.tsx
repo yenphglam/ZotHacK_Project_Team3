@@ -70,7 +70,7 @@ export function RoommateCard({ roommate }: RoommateCardProps) {
           </div>
 
           <div className="mb-4">
-            <p className="text-sm mb-2">Preferences:</p>
+            <p className="text-sm mb-2 font-bold">Preferences:</p>
             <div className="flex flex-wrap gap-2">
               {roommate.preferences.map((pref) => (
                 <Badge key={pref} variant="secondary" className="text-xs">
@@ -81,7 +81,7 @@ export function RoommateCard({ roommate }: RoommateCardProps) {
           </div>
 
           <div className="mb-4">
-            <p className="text-sm mb-2">Interests:</p>
+            <p className="text-sm mb-2 font-bold">Interests:</p>
             <div className="flex flex-wrap gap-2">
               {roommate.interests.map((interest) => (
                 <Badge key={interest} variant="outline" className="text-xs">

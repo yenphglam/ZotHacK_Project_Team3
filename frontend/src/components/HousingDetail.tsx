@@ -39,7 +39,7 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-[100vw] max-h-[100vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] max-w-[1500px] max-h-[100vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{housing.title}</DialogTitle>
         </DialogHeader>
@@ -56,7 +56,7 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <h3 className="mb-2">Details</h3>
+                <h3 className="mb-2 font-bold">Details</h3>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-gray-700">
                     <DollarSign className="h-4 w-4 text-gray-400" />
@@ -70,19 +70,16 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
                     <MapPin className="h-4 w-4 text-gray-400" />
                     <span>{housing.address}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-gray-700">
-                    <Calendar className="h-4 w-4 text-gray-400" />
-                  </div>
                 </div>
               </div>
 
               <div>
-                <h3 className="mb-2">Property Type</h3>
+                <h3 className="mb-2 font-bold">Property Type</h3>
                 <Badge>{housing.type}</Badge>
               </div>
 
               <div>
-                <h3 className="mb-3">Amenities</h3>
+                <h3 className="mb-3 font-bold">Amenities</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {housing.amenities.map((amenity) => {
                     const Icon = amenityIcons[amenity] || Home;
@@ -99,7 +96,7 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
 
             <div className="space-y-4">
               <div>
-                <h3 className="mb-2">Description</h3>
+                <h3 className="mb-2 font-bold">Description</h3>
                 <p className="text-gray-700">
                   This {housing.type} is located {housing.distance} from campus, making it perfect for students. 
                   The property features {housing.bedrooms} spacious bedrooms. 
@@ -109,7 +106,7 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
               </div>
 
               <div>
-                <h3 className="mb-2">Location</h3>
+                <h3 className="mb-2 font-bold">Location</h3>
                 <p className="text-gray-700 mb-2">
                   {housing.distance === "on campus"
                   ? "On Campus"

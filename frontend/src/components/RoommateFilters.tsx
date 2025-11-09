@@ -25,7 +25,7 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
         </div>
 
         <Select>
-          <SelectTrigger className="w-full md:w-48">
+          <SelectTrigger className="w-full md:w-48 ml-2 mb-3">
             <SelectValue placeholder="Year" />
           </SelectTrigger>
           <SelectContent>
@@ -57,14 +57,14 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
               More Filters
             </Button>
           </SheetTrigger>
-          <SheetContent>
+          <SheetContent className="ml-2 mb-3">
             <SheetHeader>
               <SheetTitle>Filter Preferences</SheetTitle>
             </SheetHeader>
             <div className="mt-6 space-y-6">
               <div>
-                <Label className="mb-3">Lifestyle Preferences</Label>
-                <div className="space-y-3">
+                <Label className="mb-3 ml-2">Lifestyle Preferences</Label>
+                <div className="space-y-3 ml-2">
                   {['Clean & Organized', 'Quiet Hours', 'Social & Friendly', 'Pet-Friendly', 'Non-Smoker', 'Early Riser'].map((pref) => (
                     <div key={pref} className="flex items-center space-x-2">
                       <Checkbox id={pref} />
@@ -77,24 +77,24 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
               </div>
 
               <div>
-                <Label className="mb-3">Move-in Timeline</Label>
+                <Label className="mb-3 ml-2">Move-in Timeline</Label>
                 <Select>
                   <SelectTrigger>
-                    <SelectValue placeholder="Any time" />
+                    <SelectValue className= "ml-2 mb-3" placeholder="Any time" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="any">Any time</SelectItem>
-                    <SelectItem value="asap">ASAP</SelectItem>
-                    <SelectItem value="month">Within 1 month</SelectItem>
-                    <SelectItem value="semester">Next semester</SelectItem>
+                    <SelectItem className= "ml-2 mb-3" value="any">Any time</SelectItem>
+                    <SelectItem className= "ml-2 mb-3" value="asap">ASAP</SelectItem>
+                    <SelectItem className= "ml-2 mb-3" value="month">Within 1 month</SelectItem>
+                    <SelectItem className= "ml-2 mb-3" value="semester">Next semester</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <Label className="mb-3">Gender Preference</Label>
+                <Label className="mb-3 ml-2">Gender Preference</Label>
                 <Select>
-                  <SelectTrigger>
+                  <SelectTrigger className="mb-3 ml-2">
                     <SelectValue placeholder="No preference" />
                   </SelectTrigger>
                   <SelectContent>
@@ -105,7 +105,7 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
                 </Select>
               </div>
 
-              <Button className="w-full">Apply Filters</Button>
+              <Button className="ml-2 mb-3w-600">Apply Filters</Button>
             </div>
           </SheetContent>
         </Sheet>
