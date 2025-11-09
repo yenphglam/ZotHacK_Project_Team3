@@ -39,7 +39,7 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-[100vw] max-h-[100vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{housing.title}</DialogTitle>
         </DialogHeader>
@@ -115,11 +115,6 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
                   ? "On Campus"
                   : `${housing.distance}`}
                 </p>
-              </div>
-
-              <div className="space-y-3 pt-4">
-                <Button className="w-full">Schedule a Tour</Button>
-                <Button variant="outline" className="w-full">Contact Landlord</Button>
               </div>
             </div>
           </div>

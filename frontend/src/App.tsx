@@ -23,7 +23,7 @@ export default function App() {
       price: "$1,400–$1,900",
       bedrooms: "1-4",
       distance: "On Campus",
-      image: "https://www.americancampus.com/getmedia/43aa50d3-94ff-45f5-ad2a-a10858d718dd/728_Main-Hero_1440x576.jpg",
+      image: "https://www.americancampus.com/getmedia/0210fef0-b254-4af1-98a2-6459b1442e76/728_18_Gallery_730x547.jpg",
       amenities: ["Wifi", "Parking", "Pool", "Study Rooms", "Gym Access", "Study Lounges", "Private Bathrooms", "Laundry"],
       type: "Apartment"
     },
