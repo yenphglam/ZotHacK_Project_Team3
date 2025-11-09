@@ -1,3 +1,6 @@
-.venv
-**/.env
-**/__pycache__/
+venv/
+.env
+firebase-credentials.json
+__pycache__/
+*.pyc
+.DS_Store

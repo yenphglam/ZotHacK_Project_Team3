@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { ScrollArea } from "./ui/scroll-area";
-import { Send, CheckCircle2, Phone, Video, MoreVertical } from "lucide-react";
+import { Send, CheckCircle2 } from "lucide-react";
 
 export function ChatDialog({ roommate, open, onClose }) {
   const [messages, setMessages] = useState([
@@ -98,17 +98,6 @@ export function ChatDialog({ roommate, open, onClose }) {
               <DialogDescription className="text-xs">
                 {roommate.major} • {roommate.year}
               </DialogDescription>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="h-9 w-9">
-                <Phone className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-9 w-9">
-                <Video className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-9 w-9">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
             </div>
           </div>
         </DialogHeader>
