@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -32,7 +32,6 @@ googleProvider.setCustomParameters({
 
 /**
  * Sign in with Google popup
- * Returns user object and ID token
  */
 export const signInWithGoogle = async () => {
   try {
@@ -40,12 +39,12 @@ export const signInWithGoogle = async () => {
     const user = result.user;
     
     // Double-check it's a UCI email
-    if (!user.email.endsWith('@uci.edu')) {
+    if (!user.email?.endsWith('@uci.edu')) {
       await signOut(auth);
       throw new Error('Please use your UCI email address (@uci.edu)');
     }
     
-    // Get ID token to send to backend
+    // Get ID token
     const idToken = await user.getIdToken();
     
     return {
@@ -57,10 +56,9 @@ export const signInWithGoogle = async () => {
       },
       idToken
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Google sign-in error:', error);
     
-    // Handle specific error cases
     if (error.code === 'auth/popup-closed-by-user') {
       throw new Error('Sign-in cancelled');
     } else if (error.code === 'auth/popup-blocked') {
@@ -86,10 +84,8 @@ export const signOutUser = async () => {
 
 /**
  * Save user profile to Firestore
- * @param {string} userId - The user's UID
- * @param {object} profileData - The profile data to save
  */
-export const saveUserProfile = async (userId, profileData) => {
+export const saveUserProfile = async (userId: string, profileData: any) => {
   try {
     const userRef = doc(db, 'users', userId);
     
@@ -111,9 +107,8 @@ export const saveUserProfile = async (userId, profileData) => {
 
 /**
  * Get user profile from Firestore
- * @param {string} userId - The user's UID
  */
-export const getUserProfile = async (userId) => {
+export const getUserProfile = async (userId: string) => {
   try {
     const userRef = doc(db, 'users', userId);
     const userSnap = await getDoc(userRef);
@@ -130,20 +125,15 @@ export const getUserProfile = async (userId) => {
 };
 
 /**
- * Find potential roommate matches based on profile
- * @param {string} currentUserId - Current user's UID
- * @param {object} userProfile - Current user's profile data
+ * Find potential roommate matches
  */
-export const findRoommateMatches = async (currentUserId, userProfile) => {
+export const findRoommateMatches = async (currentUserId: string, userProfile: any) => {
   try {
     const usersRef = collection(db, 'users');
-    
-    // Get all users (we'll filter in JavaScript)
     const querySnapshot = await getDocs(usersRef);
-    const matches = [];
+    const matches: any[] = [];
     
     querySnapshot.forEach((doc) => {
-      // Don't include current user
       if (doc.id !== currentUserId) {
         matches.push({
           id: doc.id,
@@ -152,30 +142,26 @@ export const findRoommateMatches = async (currentUserId, userProfile) => {
       }
     });
     
-    // Calculate match scores (improved algorithm)
+    // Calculate match scores
     const scoredMatches = matches.map(match => {
       let score = 0;
-      const reasons = [];
+      const reasons: string[] = [];
       
-      // Same year: +20 points
       if (match.year === userProfile.year) {
         score += 20;
         reasons.push("Same year");
       }
       
-      // Same major: +15 points
       if (match.major === userProfile.major) {
         score += 15;
         reasons.push("Same major");
       }
       
-      // Same sleep schedule: +25 points
       if (match.sleepSchedule === userProfile.sleepSchedule) {
         score += 25;
         reasons.push("Similar sleep schedule");
       }
       
-      // Similar cleanliness (within 1 level): +20 points
       if (match.cleanliness && userProfile.cleanliness) {
         const cleanDiff = Math.abs(match.cleanliness[0] - userProfile.cleanliness[0]);
         if (cleanDiff === 0) {
@@ -187,7 +173,6 @@ export const findRoommateMatches = async (currentUserId, userProfile) => {
         }
       }
       
-      // Budget overlap: +30 points
       if (match.budgetMin && match.budgetMax && userProfile.budgetMin && userProfile.budgetMax) {
         const overlap = Math.min(match.budgetMax, userProfile.budgetMax) - 
                        Math.max(match.budgetMin, userProfile.budgetMin);
@@ -197,13 +182,11 @@ export const findRoommateMatches = async (currentUserId, userProfile) => {
         }
       }
       
-      // Same move-in date: +15 points
       if (match.moveInDate === userProfile.moveInDate) {
         score += 15;
         reasons.push("Same move-in date");
       }
       
-      // Matching preferences: +10 points each
       if (match.preferences && userProfile.preferences) {
         if (match.preferences.cleanOrganized && userProfile.preferences.cleanOrganized) {
           score += 10;
@@ -227,9 +210,8 @@ export const findRoommateMatches = async (currentUserId, userProfile) => {
         }
       }
       
-      // Shared interests: +3 points per interest
       const sharedInterests = match.interests?.filter(
-        interest => userProfile.interests?.includes(interest)
+        (interest: string) => userProfile.interests?.includes(interest)
       ) || [];
       score += sharedInterests.length * 3;
       if (sharedInterests.length > 0) {
@@ -244,7 +226,6 @@ export const findRoommateMatches = async (currentUserId, userProfile) => {
       };
     });
     
-    // Sort by match score (highest first)
     scoredMatches.sort((a, b) => b.matchScore - a.matchScore);
     
     return { success: true, matches: scoredMatches };
