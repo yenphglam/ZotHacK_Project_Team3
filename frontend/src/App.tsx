@@ -8,7 +8,7 @@ import { HousingGuide } from "./components/HousingGuide";
 import { HousingDetail } from "./components/HousingDetail";
 import { ProfileForm } from "./components/ProfileForm";
 import { Button } from "./components/ui/button";
-import { ArrowRight, Loader2, Users } from "lucide-react";
+import { Loader2, Users } from "lucide-react";
 import { useRoommates } from "./hooks/useRoommates";
 import { auth } from "./lib/firebase";
 import { getUserProfile } from "./lib/firebase";
@@ -17,10 +17,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<string>("housing");
   const [selectedHousing, setSelectedHousing] = useState<Housing | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
-  const [filteredHousing, setFilteredHousing] = useState<Housing[]>([]);
 
-
-  // ADD THESE NEW LINES:
   const [user, setUser] = useState<any>(null);
   const [hasProfile, setHasProfile] = useState(false);
   const [profileFormOpen, setProfileFormOpen] = useState(false);
@@ -47,7 +44,6 @@ export default function App() {
 
   // Check if user is signed in and has a profile
   useEffect(() => {
-
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setUser(user);
       
@@ -73,7 +69,7 @@ export default function App() {
     });
 
     return () => unsubscribe();
-}, []);
+  }, []);
 
   // UC Irvine specific housing options
   const mockHousingData: Housing[] = [
@@ -85,27 +81,26 @@ export default function App() {
       bedrooms: "1-4",
       distance: "On Campus",
       image: "https://www.americancampus.com/getmedia/43aa50d3-94ff-45f5-ad2a-a10858d718dd/728_Main-Hero_1440x576.jpg",
-      amenities: ["Wifi", "Parking", "Pool", "Study Rooms", "Gym Access", "Study Lounges", "Private Bathrooms", "Laundry", ""],
+      amenities: ["Wifi", "Parking", "Pool", "Study Rooms", "Gym Access", "Study Lounges", "Private Bathrooms", "Laundry"],
       type: "Apartment"
     },
     {
       id: "2",
       title: "American Campus Communities",
       address: "4000 Plaza Verde, Irvine, CA 92612",
-      price: "1,200-1,800",
+      price: "$1,200-$1,800",
       bedrooms: "2-3",
       distance: "On Campus",
       image: "https://www.americancampus.com/getmedia/5e1af59f-6396-4724-ba31-df31804976e2/760_Main-Hero_1440x576.jpg",
-      amenities: ["Furnished", "Wifi", "Parking", "Utilities Included", "Basketball Court", "Controlled access", "Study lounge", "Courtyard",
-    "BBQ area"],
+      amenities: ["Furnished", "Wifi", "Parking", "Utilities Included", "Basketball Court", "Controlled access", "Study lounge", "Courtyard", "BBQ area"],
       type: "Apartment"
     },
     {
       id: "3",
       title: "Vista del Campo Norte",
       address: "3000 Arroyo Dr, Irvine, CA 92617",
-      price: "1,300-1,800",
-      bedrooms: "2/4",
+      price: "$1,300-$1,800",
+      bedrooms: "2-4",
       distance: "On Campus",
       image: "https://lh3.googleusercontent.com/p/AF1QipPpB9scLgOHwI3lxlzgg3HzB-zjh0-BzeFqeMik=s1360-w1360-h1020-rw",
       amenities: ["Wifi", "Parking", "Pool", "Gym Access", "Laundry"],
@@ -115,11 +110,9 @@ export default function App() {
       id: "4",
       title: "University Town Center Condos",
       address: "Campus Dr, Irvine, CA 92612",
-      price: 1800,
-      bedrooms: 2,
-      bathrooms: 2,
+      price: "$1,800",
+      bedrooms: "2",
       distance: "1.5 mi from UCI",
-      available: "September 2025",
       image: "https://images.unsplash.com/photo-1563418536419-3a3ad6ef5efd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcGFydG1lbnQlMjBpbnRlcmlvciUyMG1vZGVybnxlbnwxfHx8fDE3NjI1Nzg2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       amenities: ["WiFi", "Parking", "Pool", "Gym", "Near Shopping"],
       type: "Apartment"
@@ -128,123 +121,75 @@ export default function App() {
       id: "5",
       title: "Harvard & Cornell Court",
       address: "20 Harvard Ct, Irvine, CA 92612",
-      price: "2,500-3,400",
+      price: "$2,500-$3,400",
       bedrooms: "1-3",
-      distance: "0.4 from campus",
+      distance: "0.4 mi from campus",
       image: "https://dynamicmedia.irvinecompany.com/is/image/content/dam/apartments/3-readytopublish/communities/orangecounty/irvine/universitytowncenter/harvardcourt/photography/Harvard-CMF-4236.jpg?&wid=1920&iccEmbed=1&icc=AdobeRGB&resMode=sharp2&fmt=pjpeg&pscan=auto",
-      amenities: [ "Pool",
-      "Fitness center",
-      "Study lounge",
-      "Events",
-      "Furnished apartments",
-      "Laundry",
-      "BBQ area",
-      "Wifi"],
+      amenities: ["Pool", "Fitness center", "Study lounge", "Events", "Furnished apartments", "Laundry", "BBQ area", "Wifi"],
       type: "Apartment"
     },
     {
       id: "6",
       title: "Stanford Court",
       address: "20 Peters Canyon Rd, Irvine, CA 92606",
-      price: "2,300-3,100",
+      price: "$2,300-$3,100",
       bedrooms: "1",
       distance: "0.3 mi from UCI",
       image: "https://dynamicmedia.irvinecompany.com/is/image/content/dam/apartments/3-readytopublish/communities/orangecounty/irvine/universitytowncenter/stanfordcourt/photography/Stanford-CMF-4339.jpg?&crop=0,751,7195,4049&wid=1360&iccEmbed=1&icc=AdobeRGB&resMode=sharp2&fmt=pjpeg&pscan=auto",
-      amenities: ["Pool",
-      "Fitness center",
-      "Clubhouse",
-      "Pet-friendly",
-      "Parking",
-      "Wifi",
-      "BBQ area"],
+      amenities: ["Pool", "Fitness center", "Clubhouse", "Pet-friendly", "Parking", "Wifi", "BBQ area"],
       type: "Apartment"
     },
     {
       id: "7",
       title: "Berkeley & Columbia Court",
       address: "100 Columbia, Irvine, CA 92612",
-      price: "2,400-3,000",
+      price: "$2,400-$3,000",
       bedrooms: "1-2",
       distance: "0.3 mi from UCI",
       image: "https://dynamicmedia.irvinecompany.com/is/image/content/dam/apartments/3-readytopublish/communities/orangecounty/irvine/universitytowncenter/berkeleycourt/photography/BerkeleyCourt-MasterBedroom-CMF-6948.jpg?&wid=1920&iccEmbed=1&icc=AdobeRGB&resMode=sharp2&fmt=pjpeg&pscan=auto",
-      amenities: ["Workspace",
-      "Fitness center",
-      "Laundry",
-      "Parking",
-      "BBQ area",
-      "Smoke-free",
-      "Wifi",
-      "Bike storage",
-      "Pool",
-      "Hot tub"],
+      amenities: ["Workspace", "Fitness center", "Laundry", "Parking", "BBQ area", "Smoke-free", "Wifi", "Bike storage", "Pool", "Hot tub"],
       type: "Apartment"
     },
     {
       id: "8",
       title: "Park West Apartments",
       address: "3883 Parkview Ln, Irvine, CA 92612",
-      price: "2,000-3,800",
+      price: "$2,000-$3,800",
       bedrooms: "Studio, 1-3",
       distance: "1.5 mi from UCI",
       image: "https://images1.apartments.com/i2/QOu1ARrZ-1_B2MuAI3bhrBiWPgoLQlkKwCggyhWSLo4/116/park-west-apartment-homes-irvine-ca-building-photo.jpg?p=1",
-      amenities: ["Pool",
-      "Fitness center",
-      "Tennis court",
-      "Clubhouse",
-      "BBQ area",
-      "Basketball court",
-      "Laundry",
-      "Pet-friendly",
-      "24-hour maintenance",
-      "Wifi"],
+      amenities: ["Pool", "Fitness center", "Tennis court", "Clubhouse", "BBQ area", "Basketball court", "Laundry", "Pet-friendly", "24-hour maintenance", "Wifi"],
       type: "Apartment"
     },
     {
       id: "9",
       title: "Toscana Apartments",
       address: "35 Via Lucca, Irvine, CA 92612",
-      price: "2,600-3,600",
+      price: "$2,600-$3,600",
       bedrooms: "1",
       distance: "2.3 mi from campus",
       image: "https://media.equityapartments.com/images/q_auto/f_auto/fl_lossy/1558-127/toscana-apartments-living-room",
-      amenities: ["Pool",
-      "Fitness center",
-      "Yoga room",
-      "Clubhouse",
-      "Courtyard",
-      "Pet-friendly",
-      "Package lockers",
-      "Controlled access",
-      "Wifi"
-],
+      amenities: ["Pool", "Fitness center", "Yoga room", "Clubhouse", "Courtyard", "Pet-friendly", "Package lockers", "Controlled access", "Wifi"],
       type: "Apartment"
     },
     {
       id: "10",
       title: "Axis 2300",
       address: "2300 Dupont Dr, Irvine, CA 92612",
-      price: "2,500-3,500",
+      price: "$2,500-$3,500",
       bedrooms: "Studio, 1-2",
       distance: "2.7 mi from campus",
       image: "https://images1.apartments.com/i2/fckkHRWFFGJxv0O4l6gANahLhsTsJa4yffRVmT5UMO0/116/axis-2300-apartments-irvine-ca-building-photo.jpg?p=1",
-      amenities: [ "Rooftop deck",
-      "Fitness center",
-      "Pool",
-      "Study lounge",
-      "Pet-friendly",
-      "Bike storage",
-      "Package lockers",
-      "Controlled access",
-      "Wifi"],
+      amenities: ["Rooftop deck", "Fitness center", "Pool", "Study lounge", "Pet-friendly", "Bike storage", "Package lockers", "Controlled access", "Wifi"],
       type: "Apartment"
     },
     {
       id: "11",
       title: "Villa Siena Apartments",
       address: "25 Palatine, Irvine, CA 92612",
-      price: "2,400-3,600",
+      price: "$2,400-$3,600",
       bedrooms: "Studio, 1-3",
-      distance: "1.6 mi from UCI",  
+      distance: "1.6 mi from UCI",
       image: "https://i.rent.com/t_w_webp_2xl/0811a77c3c32836ca17751c8d5ea19ad",
       amenities: ["Wifi", "Parking", "Laundry", "Study Rooms"],
       type: "Apartment"
@@ -253,29 +198,14 @@ export default function App() {
       id: "12",
       title: "Elements Apartments",
       address: "1000 Elements Way, Irvine, CA 92612",
-      price: "3,000-4,200",
+      price: "$3,000-$4,200",
       bedrooms: "2",
       distance: "2.7 mi from UCI",
       image: "https://cdngeneral.point2homes.com/dmslivecafe/2/93425/Garden_Elements_Metal__06112021%20(5).jpg?width=1600&quality=80",
-      amenities: ["Pool",
-      "BBQ area",
-      "Fitness center",
-      "Yoga room",
-      "Study lounge",
-      "Clubhouse",
-      "EV charging",
-      "Pet-friendly",
-      "Laundry",
-      "Parking",
-      "Smoke-free",
-      "Wifi"
-],
+      amenities: ["Pool", "BBQ area", "Fitness center", "Yoga room", "Study lounge", "Clubhouse", "EV charging", "Pet-friendly", "Laundry", "Parking", "Smoke-free", "Wifi"],
       type: "Apartment"
     }
-
-
   ];
-
 
   const [filteredHousing, setFilteredHousing] = useState<Housing[]>(mockHousingData);
 
@@ -302,20 +232,60 @@ export default function App() {
     // Bedrooms
     if (filters.bedrooms && filters.bedrooms !== 'any') {
       const bedroomCount = parseInt(filters.bedrooms);
-      if (bedroomCount === 3) {
-        // 3+ bedrooms
-        filtered = filtered.filter(housing => housing.bedrooms >= 3);
-      } else {
-        filtered = filtered.filter(housing => housing.bedrooms === bedroomCount);
-      }
+      filtered = filtered.filter(housing => {
+        const bedroomStr = housing.bedrooms.toLowerCase();
+        // Handle ranges like "1-4", "2-3", etc.
+        if (bedroomStr.includes('-')) {
+          const [min, max] = bedroomStr.split('-').map(s => parseInt(s.trim()));
+          if (bedroomCount === 3) {
+            // 3+ bedrooms - check if max is >= 3
+            return max >= 3;
+          }
+          return bedroomCount >= min && bedroomCount <= max;
+        }
+        // Handle "Studio, 1-3" format
+        if (bedroomStr.includes(',')) {
+          if (bedroomStr.includes('studio') && bedroomCount === 0) return true;
+          const match = bedroomStr.match(/(\d+)-(\d+)/);
+          if (match) {
+            const [, min, max] = match.map(s => parseInt(s));
+            if (bedroomCount === 3) {
+              return max >= 3;
+            }
+            return bedroomCount >= min && bedroomCount <= max;
+          }
+        }
+        // Handle single number
+        const num = parseInt(bedroomStr);
+        if (!isNaN(num)) {
+          if (bedroomCount === 3) {
+            return num >= 3;
+          }
+          return num === bedroomCount;
+        }
+        return false;
+      });
     }
 
     // Price range
     if (filters.priceRange && filters.priceRange.length === 2) {
-      filtered = filtered.filter(housing => 
-        housing.price >= filters.priceRange[0] && 
-        housing.price <= filters.priceRange[1]
-      );
+      filtered = filtered.filter(housing => {
+        // Extract numbers from price string
+        const priceStr = housing.price.replace(/[$,]/g, '');
+        const prices = priceStr.split(/[-–]/).map(p => parseInt(p.trim()));
+        
+        if (prices.length === 2) {
+          // Range like "$1,400-$1,900"
+          const [minPrice, maxPrice] = prices;
+          // Check if there's any overlap between the ranges
+          return maxPrice >= filters.priceRange[0] && minPrice <= filters.priceRange[1];
+        } else if (prices.length === 1) {
+          // Single price like "$1,800"
+          const price = prices[0];
+          return price >= filters.priceRange[0] && price <= filters.priceRange[1];
+        }
+        return false;
+      });
     }
 
     // Distance
@@ -368,92 +338,91 @@ export default function App() {
   };
 
   const handleRoommateFilterChange = (filters: any) => {
-  console.log('🔍 Applying roommate filters:', filters);
-  
-  let filtered = roommates;
+    console.log('🔍 Applying roommate filters:', filters);
+    
+    let filtered = roommates;
 
-  // Search query
-  if (filters.searchQuery && filters.searchQuery.trim() !== '') {
-    const query = filters.searchQuery.toLowerCase();
-    filtered = filtered.filter(roommate => 
-      roommate.name.toLowerCase().includes(query) ||
-      roommate.major.toLowerCase().includes(query) ||
-      roommate.bio.toLowerCase().includes(query) ||
-      roommate.interests.some((i: string) => i.toLowerCase().includes(query))
-    );
-  }
+    // Search query
+    if (filters.searchQuery && filters.searchQuery.trim() !== '') {
+      const query = filters.searchQuery.toLowerCase();
+      filtered = filtered.filter(roommate => 
+        roommate.name.toLowerCase().includes(query) ||
+        roommate.major.toLowerCase().includes(query) ||
+        roommate.bio.toLowerCase().includes(query) ||
+        roommate.interests.some((i: string) => i.toLowerCase().includes(query))
+      );
+    }
 
-  // Academic year
-  if (filters.year && filters.year !== 'all') {
-    filtered = filtered.filter(roommate => roommate.year === filters.year);
-  }
+    // Academic year
+    if (filters.year && filters.year !== 'all') {
+      filtered = filtered.filter(roommate => roommate.year === filters.year);
+    }
 
-  // Budget range - check if budgets overlap
-  if (filters.budgetRange && filters.budgetRange.length === 2) {
-    filtered = filtered.filter(roommate => {
-      const overlap = 
-        Math.min(roommate.budgetMax, filters.budgetRange[1]) -
-        Math.max(roommate.budgetMin, filters.budgetRange[0]);
-      return overlap > 0;
-    });
-  }
-
-  // Sleep schedule
-  if (filters.sleepSchedule && filters.sleepSchedule !== 'any') {
-    filtered = filtered.filter(roommate => 
-      roommate.sleepSchedule === filters.sleepSchedule ||
-      roommate.sleepSchedule === 'flexible' ||
-      filters.sleepSchedule === 'flexible'
-    );
-  }
-
-  // Cleanliness level
-  if (filters.cleanliness && filters.cleanliness.length === 2) {
-    filtered = filtered.filter(roommate => {
-      const roommateClean = roommate.cleanliness[0];
-      return roommateClean >= filters.cleanliness[0] && 
-             roommateClean <= filters.cleanliness[1];
-    });
-  }
-
-  // Move-in date
-  if (filters.moveInDate && filters.moveInDate !== 'any') {
-    filtered = filtered.filter(roommate => 
-      roommate.moveInDate === filters.moveInDate ||
-      roommate.moveInDate === 'Flexible' ||
-      filters.moveInDate === 'Flexible'
-    );
-  }
-
-  // Preferences
-  // Preferences
-  if (filters.preferences && filters.preferences.length > 0) {
-    filtered = filtered.filter(roommate => {
-      const prefMap: Record<string, keyof typeof roommate.preferences> = {
-        'Clean & Organized': 'cleanOrganized',
-        'Quiet Hours': 'quietHours',
-        'Non-Smoker': 'nonSmoker',
-        'Pets Allowed': 'petsAllowed',
-        'Guests Okay': 'guestsOk'
-      };
-
-      return filters.preferences.every((pref: string) => {
-        const prefKey = prefMap[pref];
-        return prefKey && roommate.preferences[prefKey] === true;
+    // Budget range - check if budgets overlap
+    if (filters.budgetRange && filters.budgetRange.length === 2) {
+      filtered = filtered.filter(roommate => {
+        const overlap = 
+          Math.min(roommate.budgetMax, filters.budgetRange[1]) -
+          Math.max(roommate.budgetMin, filters.budgetRange[0]);
+        return overlap > 0;
       });
-    });
-  }
+    }
 
-  // Minimum match score
-  if (filters.minMatchScore && filters.minMatchScore > 0) {
-    filtered = filtered.filter(roommate => 
-      (roommate.matchScore || 0) >= filters.minMatchScore
-    );
-  }
+    // Sleep schedule
+    if (filters.sleepSchedule && filters.sleepSchedule !== 'any') {
+      filtered = filtered.filter(roommate => 
+        roommate.sleepSchedule === filters.sleepSchedule ||
+        roommate.sleepSchedule === 'flexible' ||
+        filters.sleepSchedule === 'flexible'
+      );
+    }
 
-  console.log('✅ Filtered roommates:', filtered.length);
-  setFilteredRoommates(filtered);
-};
+    // Cleanliness level
+    if (filters.cleanliness && filters.cleanliness.length === 2) {
+      filtered = filtered.filter(roommate => {
+        const roommateClean = roommate.cleanliness[0];
+        return roommateClean >= filters.cleanliness[0] && 
+               roommateClean <= filters.cleanliness[1];
+      });
+    }
+
+    // Move-in date
+    if (filters.moveInDate && filters.moveInDate !== 'any') {
+      filtered = filtered.filter(roommate => 
+        roommate.moveInDate === filters.moveInDate ||
+        roommate.moveInDate === 'Flexible' ||
+        filters.moveInDate === 'Flexible'
+      );
+    }
+
+    // Preferences
+    if (filters.preferences && filters.preferences.length > 0) {
+      filtered = filtered.filter(roommate => {
+        const prefMap: Record<string, keyof typeof roommate.preferences> = {
+          'Clean & Organized': 'cleanOrganized',
+          'Quiet Hours': 'quietHours',
+          'Non-Smoker': 'nonSmoker',
+          'Pets Allowed': 'petsAllowed',
+          'Guests Okay': 'guestsOk'
+        };
+
+        return filters.preferences.every((pref: string) => {
+          const prefKey = prefMap[pref];
+          return prefKey && roommate.preferences[prefKey] === true;
+        });
+      });
+    }
+
+    // Minimum match score
+    if (filters.minMatchScore && filters.minMatchScore > 0) {
+      filtered = filtered.filter(roommate => 
+        (roommate.matchScore || 0) >= filters.minMatchScore
+      );
+    }
+
+    console.log('✅ Filtered roommates:', filtered.length);
+    setFilteredRoommates(filtered);
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -479,13 +448,10 @@ export default function App() {
               <p className="text-xl mb-8" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
                 Discover housing options near UCI campus - from on-campus dorms to apartments in Irvine, Costa Mesa, and Newport Beach. Your Anteater home awaits!
               </p>
-              <div className="flex flex-wrap gap-4">
-              </div>
             </div>
           </div>
         </div>
       )}
-
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
@@ -494,29 +460,28 @@ export default function App() {
             <HousingFilters onFilterChange={handleFilterChange} />
             
             <div className="mb-8">
-            <h2 className="mb-3 text-2xl font-bold">Available Housing</h2>
-            <p className="text-gray-600 text-lg">{filteredHousing.length} listings found</p>
-          </div>
+              <h2 className="mb-3 text-2xl font-bold">Available Housing</h2>
+              <p className="text-gray-600 text-lg">{filteredHousing.length} listings found</p>
+            </div>
 
-          {filteredHousing.length === 0 ? (
-            <div className="text-center py-12 bg-gray-50 rounded-lg">
-              <p className="text-gray-600 text-lg mb-2">No housing matches your filters</p>
-              <p className="text-sm text-gray-500">Try adjusting your search criteria</p>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredHousing.map((housing) => (
-                <HousingCard
-                  key={housing.id}
-                  housing={housing}
-                  onClick={() => handleHousingClick(housing)}
-                />
-              ))}
-            </div>
-          )}
+            {filteredHousing.length === 0 ? (
+              <div className="text-center py-12 bg-gray-50 rounded-lg">
+                <p className="text-gray-600 text-lg mb-2">No housing matches your filters</p>
+                <p className="text-sm text-gray-500">Try adjusting your search criteria</p>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredHousing.map((housing) => (
+                  <HousingCard
+                    key={housing.id}
+                    housing={housing}
+                    onClick={() => handleHousingClick(housing)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
-
 
         {activeTab === "roommates" && (
           <div>
@@ -526,7 +491,6 @@ export default function App() {
                 {filteredRoommates.length} compatible roommate{filteredRoommates.length !== 1 ? 's' : ''} found
               </p>
             </div>
-
 
             {/* Single Filter Bar */}
             <RoommateFilters onFilterChange={handleRoommateFilterChange} />
@@ -605,10 +569,8 @@ export default function App() {
           </div>
         )}
 
-
         {activeTab === "guide" && <HousingGuide />}
       </main>
-
 
       <HousingDetail
         housing={selectedHousing}
@@ -622,6 +584,5 @@ export default function App() {
         onComplete={handleProfileComplete}
       />
     </div>
-
   );
 }

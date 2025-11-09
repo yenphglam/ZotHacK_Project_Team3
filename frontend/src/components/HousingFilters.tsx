@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -88,7 +87,7 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
             <SelectValue placeholder="Property Type" />
           </SelectTrigger>
           <SelectContent position="popper" className="z-[10000]">
-            <SelectItem value="All">All Types</SelectItem>
+            <SelectItem value="all">All Types</SelectItem>
             <SelectItem value="Apartment">Apartment</SelectItem>
             <SelectItem value="House">House</SelectItem>
             <SelectItem value="Dorm">Dorm</SelectItem>
@@ -218,7 +217,7 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
           
           {propertyType !== 'all' && (
             <Badge variant="secondary">
-              {propertyType.charAt(0).toUpperCase() + propertyType.slice(1)}
+              {propertyType}
               <button 
                 onClick={() => setPropertyType("all")}
                 className="ml-2"
