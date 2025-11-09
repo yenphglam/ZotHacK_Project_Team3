@@ -53,7 +53,7 @@ export function Header({ activeTab, onTabChange, onProfileClick }: HeaderProps) 
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-2">
-              <Home className="h-6 w-6 text-blue-600" />
+              <Home className="h-6 w-6" style={{ color: 'rgb(17, 63, 103)' }} />
               <span className="text-xl font-bold">ZotHomes</span>
             </div>
             
@@ -61,8 +61,9 @@ export function Header({ activeTab, onTabChange, onProfileClick }: HeaderProps) 
               <button
                 onClick={() => onTabChange('housing')}
                 className={`flex items-center gap-2 transition-colors ${
-                  activeTab === 'housing' ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'
+                  activeTab === 'housing' ? 'text-gray-600 hover:text-gray-900' : 'text-gray-600 hover:text-gray-900'
                 }`}
+                style={activeTab === 'housing' ? { color: 'rgb(17, 63, 103)' } : {}}
               >
                 <Home className="h-4 w-4" />
                 Housing
@@ -70,8 +71,9 @@ export function Header({ activeTab, onTabChange, onProfileClick }: HeaderProps) 
               <button
                 onClick={() => onTabChange('roommates')}
                 className={`flex items-center gap-2 transition-colors ${
-                  activeTab === 'roommates' ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'
+                  activeTab === 'roommates' ? 'text-gray-600 hover:text-gray-900' : 'text-gray-600 hover:text-gray-900'
                 }`}
+                style={activeTab === 'roommates' ? { color: 'rgb(17, 63, 103)' } : {}}
               >
                 <Users className="h-4 w-4" />
                 Find Roommates
@@ -79,8 +81,9 @@ export function Header({ activeTab, onTabChange, onProfileClick }: HeaderProps) 
               <button
                 onClick={() => onTabChange('guide')}
                 className={`flex items-center gap-2 transition-colors ${
-                  activeTab === 'guide' ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'
+                  activeTab === 'guide' ? 'text-gray-600 hover:text-gray-900' : 'text-gray-600 hover:text-gray-900'
                 }`}
+                style={activeTab === 'guide' ? { color: 'rgb(17, 63, 103)' } : {}}
               >
                 <BookOpen className="h-4 w-4" />
                 Housing Guide

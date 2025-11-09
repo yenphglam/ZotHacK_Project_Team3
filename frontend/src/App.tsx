@@ -421,7 +421,7 @@ export default function App() {
 
       {/* Hero Section */}
       {activeTab === "housing" && (
-        <div className="relative bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20 hover:from-blue-600 hover:to-blue-800">
+        <div className="relative text-white py-20" style={{ background: 'linear-gradient(to bottom right, rgb(17, 63, 103), rgb(12, 45, 75))' }}>
           <div className="absolute inset-0 opacity-10">
             <div className="absolute inset-0" style={{
               backgroundImage: `url('https://images.unsplash.com/flagged/photo-1580408453889-ed5e1b51924a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwY2FtcHVzJTIwYnVpbGRpbmd8ZW58MXx8fHwxNzYyNTAxMTU0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')`,
@@ -432,7 +432,7 @@ export default function App() {
           <div className="container mx-auto px-4 relative">
             <div className="max-w-3xl">
               <h1 className="mb-4">Find Your Perfect UC Irvine Housing</h1>
-              <p className="text-xl mb-8 text-blue-100">
+              <p className="text-xl mb-8" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
                 Discover housing options near UCI campus - from on-campus dorms to apartments in Irvine, Costa Mesa, and Newport Beach. Your Anteater home awaits!
               </p>
               <div className="flex flex-wrap gap-4">
@@ -486,7 +486,7 @@ export default function App() {
 
             {/* Show message if not signed in */}
             {!user && (
-              <div className="text-center py-12 bg-blue-50 rounded-lg">
+              <div className="text-center py-12 rounded-lg" style={{ backgroundColor: 'rgba(17, 63, 103, 0.05)' }}>
                 <p className="text-gray-700 mb-4 text-lg">
                   Sign in to view and connect with potential roommates
                 </p>
@@ -511,7 +511,7 @@ export default function App() {
             {/* Show loading state */}
             {user && hasProfile && roommatesLoading && (
               <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'rgb(17, 63, 103)' }} />
                 <span className="ml-3 text-gray-600">Finding your perfect matches...</span>
               </div>
             )}
