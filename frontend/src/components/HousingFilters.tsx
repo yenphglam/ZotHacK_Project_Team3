@@ -6,14 +6,15 @@ import { Slider } from "./ui/slider";
 import { Label } from "./ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Checkbox } from "./ui/checkbox";
-import { useState } from "react"; // ✅ Add this
+import { Badge } from "./ui/badge";
+import { useState, useEffect } from "react";
 
 interface HousingFiltersProps {
   onFilterChange: (filters: any) => void;
 }
 
 export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
-  // ✅ Add state for all filters
+  // State for all filters
   const [searchQuery, setSearchQuery] = useState("");
   const [propertyType, setPropertyType] = useState("all");
   const [bedrooms, setBedrooms] = useState("any");
@@ -21,17 +22,17 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
   const [distance, setDistance] = useState("any");
   const [amenities, setAmenities] = useState<string[]>([]);
 
-  // ✅ Handle amenity toggle
-  const handleAmenityToggle = (amenity: string) => {
-    setAmenities(prev => 
-      prev.includes(amenity) 
-        ? prev.filter(a => a !== amenity)
-        : [...prev, amenity]
-    );
-  };
+  // 🔥 AUTO-APPLY FILTERS - This runs whenever ANY filter changes
+  useEffect(() => {
+    console.log('🔍 Housing filters changed, applying...', {
+      searchQuery,
+      propertyType,
+      bedrooms,
+      priceRange,
+      distance,
+      amenities
+    });
 
-  // ✅ Apply filters
-  const applyFilters = () => {
     onFilterChange({
       searchQuery,
       propertyType,
@@ -40,9 +41,18 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
       distance,
       amenities
     });
+  }, [searchQuery, propertyType, bedrooms, priceRange, distance, amenities]);
+
+  // Handle amenity toggle
+  const handleAmenityToggle = (amenity: string) => {
+    setAmenities(prev => 
+      prev.includes(amenity) 
+        ? prev.filter(a => a !== amenity)
+        : [...prev, amenity]
+    );
   };
 
-    // ✅ Add reset function
+  // Reset all filters
   const resetFilters = () => {
     setSearchQuery("");
     setPropertyType("all");
@@ -50,14 +60,6 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
     setPriceRange([0, 3000]);
     setDistance("any");
     setAmenities([]);
-    onFilterChange({
-      searchQuery: "",
-      propertyType: "all",
-      bedrooms: "any",
-      priceRange: [0, 3000],
-      distance: "any",
-      amenities: []
-    });
   };
 
   return (
@@ -71,23 +73,17 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
               placeholder="Search by location, neighborhood..."
               className="pl-10"
               value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                applyFilters(); // Apply on every keystroke
-              }}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
 
         {/* Property Type */}
-        <Select value={propertyType} onValueChange={(value) => {
-          setPropertyType(value);
-          applyFilters();
-        }}>
+        <Select value={propertyType} onValueChange={setPropertyType}>
           <SelectTrigger className="w-full md:w-48">
             <SelectValue placeholder="Property Type" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper" className="z-[10000]">
             <SelectItem value="all">All Types</SelectItem>
             <SelectItem value="apartment">Apartment</SelectItem>
             <SelectItem value="house">House</SelectItem>
@@ -97,14 +93,11 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
         </Select>
 
         {/* Bedrooms */}
-        <Select value={bedrooms} onValueChange={(value) => {
-          setBedrooms(value);
-          applyFilters();
-        }}>
+        <Select value={bedrooms} onValueChange={setBedrooms}>
           <SelectTrigger className="w-full md:w-48">
             <SelectValue placeholder="Bedrooms" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper" className="z-[10000]">
             <SelectItem value="any">Any</SelectItem>
             <SelectItem value="1">1 Bedroom</SelectItem>
             <SelectItem value="2">2 Bedrooms</SelectItem>
@@ -118,6 +111,11 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
             <Button variant="outline">
               <SlidersHorizontal className="h-4 w-4 mr-2" />
               More Filters
+              {(amenities.length > 0 || distance !== 'any' || priceRange[0] !== 0 || priceRange[1] !== 3000) && (
+                <span className="ml-2 bg-blue-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                  {amenities.length + (distance !== 'any' ? 1 : 0) + (priceRange[0] !== 0 || priceRange[1] !== 3000 ? 1 : 0)}
+                </span>
+              )}
             </Button>
           </SheetTrigger>
           <SheetContent className="overflow-y-auto p-6">
@@ -137,10 +135,27 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
                     step={50} 
                   />
                   <div className="flex justify-between mt-3 text-sm text-gray-600">
-                    <span>${priceRange[0]}</span>
-                    <span>${priceRange[1]}</span>
+                    <span>${priceRange[0]}/mo</span>
+                    <span>${priceRange[1]}/mo</span>
                   </div>
                 </div>
+              </div>
+
+              {/* Distance Section */}
+              <div className="space-y-4">
+                <Label className="text-base font-semibold">Distance from Campus</Label>
+                <Select value={distance} onValueChange={setDistance}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Any distance" />
+                  </SelectTrigger>
+                  <SelectContent position="popper" className="z-[10000]">
+                    <SelectItem value="any">Any distance</SelectItem>
+                    <SelectItem value="walking">Walking distance</SelectItem>
+                    <SelectItem value="1mi">Within 1 mile</SelectItem>
+                    <SelectItem value="3mi">Within 3 miles</SelectItem>
+                    <SelectItem value="5mi">Within 5 miles</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Amenities Section */}
@@ -165,40 +180,101 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
                 </div>
               </div>
 
-              {/* Distance Section */}
-              <div className="space-y-4">
-                <Label className="text-base font-semibold">Distance from Campus</Label>
-                <Select value={distance} onValueChange={setDistance}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Any distance" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any">Any distance</SelectItem>
-                    <SelectItem value="walking">Walking distance</SelectItem>
-                    <SelectItem value="1mi">Within 1 mile</SelectItem>
-                    <SelectItem value="3mi">Within 3 miles</SelectItem>
-                    <SelectItem value="5mi">Within 5 miles</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
               {/* Reset Button */}
               <Button 
                 variant="outline" 
                 className="w-full" 
                 onClick={resetFilters}
               >
-                Reset Filters
-              </Button>
-
-              {/* Apply Button */}
-              <Button className="w-full mt-6" onClick={applyFilters}>
-                Apply Filters
+                Reset All Filters
               </Button>
             </div>
           </SheetContent>
         </Sheet>
       </div>
+
+      {/* Active Filters Display */}
+      {(searchQuery || propertyType !== 'all' || bedrooms !== 'any' || distance !== 'any' || amenities.length > 0 || priceRange[0] !== 0 || priceRange[1] !== 3000) && (
+        <div className="flex flex-wrap gap-2 mt-4">
+          <span className="text-sm text-gray-600">Active filters:</span>
+          
+          {searchQuery && (
+            <Badge variant="secondary">
+              Search: {searchQuery}
+              <button 
+                onClick={() => setSearchQuery("")}
+                className="ml-2"
+              >
+                ×
+              </button>
+            </Badge>
+          )}
+          
+          {propertyType !== 'all' && (
+            <Badge variant="secondary">
+              {propertyType.charAt(0).toUpperCase() + propertyType.slice(1)}
+              <button 
+                onClick={() => setPropertyType("all")}
+                className="ml-2"
+              >
+                ×
+              </button>
+            </Badge>
+          )}
+          
+          {bedrooms !== 'any' && (
+            <Badge variant="secondary">
+              {bedrooms === '3' ? '3+' : bedrooms} Bedroom{bedrooms !== '1' ? 's' : ''}
+              <button 
+                onClick={() => setBedrooms("any")}
+                className="ml-2"
+              >
+                ×
+              </button>
+            </Badge>
+          )}
+
+          {(priceRange[0] !== 0 || priceRange[1] !== 3000) && (
+            <Badge variant="secondary">
+              ${priceRange[0]}-${priceRange[1]}/mo
+              <button 
+                onClick={() => setPriceRange([0, 3000])}
+                className="ml-2"
+              >
+                ×
+              </button>
+            </Badge>
+          )}
+
+          {distance !== 'any' && (
+            <Badge variant="secondary">
+              {distance === 'walking' ? 'Walking distance' : 
+               distance === '1mi' ? 'Within 1 mile' :
+               distance === '3mi' ? 'Within 3 miles' :
+               'Within 5 miles'}
+              <button 
+                onClick={() => setDistance("any")}
+                className="ml-2"
+              >
+                ×
+              </button>
+            </Badge>
+          )}
+          
+          {amenities.map(amenity => (
+            <Badge key={amenity} variant="secondary">
+              {amenity}
+              <button 
+                onClick={() => handleAmenityToggle(amenity)}
+                className="ml-2"
+              >
+                ×
+              </button>
+            </Badge>
+          ))}
+          
+        </div>
+      )}
     </div>
   );
 }
