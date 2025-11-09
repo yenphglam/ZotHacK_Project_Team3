@@ -25,7 +25,7 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
         </div>
 
         <Select>
-          <SelectTrigger className="w-full md:w-48">
+          <SelectTrigger className="w-full md:w-48 ml-2 mb-3">
             <SelectValue placeholder="Year" />
           </SelectTrigger>
           <SelectContent>
@@ -57,7 +57,7 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
               More Filters
             </Button>
           </SheetTrigger>
-          <SheetContent>
+          <SheetContent className="overflow-y-auto p-6">
             <SheetHeader>
               <SheetTitle>Filter Preferences</SheetTitle>
             </SheetHeader>
@@ -80,13 +80,13 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
                 <Label className="mb-3">Move-in Timeline</Label>
                 <Select>
                   <SelectTrigger>
-                    <SelectValue placeholder="Any time" />
+                    <SelectValue className= "ml-2" placeholder="Any time" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="any">Any time</SelectItem>
-                    <SelectItem value="asap">ASAP</SelectItem>
-                    <SelectItem value="month">Within 1 month</SelectItem>
-                    <SelectItem value="semester">Next semester</SelectItem>
+                    <SelectItem className= "ml-2 mb-3" value="any">Any time</SelectItem>
+                    <SelectItem className= "ml-2 mb-3" value="asap">ASAP</SelectItem>
+                    <SelectItem className= "ml-2 mb-3" value="month">Within 1 month</SelectItem>
+                    <SelectItem className= "ml-2 mb-3" value="semester">Next semester</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -94,7 +94,7 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
               <div>
                 <Label className="mb-3">Gender Preference</Label>
                 <Select>
-                  <SelectTrigger>
+                  <SelectTrigger className="mb-3">
                     <SelectValue placeholder="No preference" />
                   </SelectTrigger>
                   <SelectContent>
@@ -105,7 +105,7 @@ export function RoommateFilters({ onFilterChange }: RoommateFiltersProps) {
                 </Select>
               </div>
 
-              <Button className="w-full">Apply Filters</Button>
+              <Button className="ml-2 mb-3w-600">Apply Filters</Button>
             </div>
           </SheetContent>
         </Sheet>

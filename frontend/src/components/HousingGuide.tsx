@@ -4,28 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 
 export function HousingGuide() {
-  const tips = [
-    {
-      icon: DollarSign,
-      title: "Understanding Costs",
-      description: "Learn about rent, deposits, utilities, and hidden costs to budget effectively."
-    },
-    {
-      icon: FileText,
-      title: "Lease Agreements",
-      description: "What to look for in a lease and your rights as a tenant."
-    },
-    {
-      icon: Users,
-      title: "Living with Roommates",
-      description: "Tips for finding compatible roommates and resolving conflicts."
-    },
-    {
-      icon: Shield,
-      title: "Safety & Security",
-      description: "How to assess neighborhood safety and secure your living space."
-    }
-  ];
+  
 
   return (
     <div className="space-y-6">
@@ -40,7 +19,7 @@ export function HousingGuide() {
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Important for UCI Students</AlertTitle>
         <AlertDescription>
-          Start your housing search 2-3 months before you need to move in. On-campus housing and popular Irvine apartments fill up quickly, especially for fall quarter!
+          Start your housing search 3-4 months before you need to move in. On-campus housing and popular Irvine apartments fill up quickly, especially for fall quarter!
         </AlertDescription>
       </Alert>
 
@@ -80,26 +59,6 @@ export function HousingGuide() {
         </CardContent>
       </Card>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {tips.map((tip) => {
-          const Icon = tip.icon;
-          return (
-            <Card key={tip.title}>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <Icon className="h-5 w-5 text-blue-600" />
-                  </div>
-                  {tip.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">{tip.description}</p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
 
       <Card>
         <CardHeader>
@@ -110,7 +69,7 @@ export function HousingGuide() {
             <AccordionItem value="item-1">
               <AccordionTrigger>When should I start looking for housing at UCI?</AccordionTrigger>
               <AccordionContent>
-                For UCI students, start your housing search 2-3 months before your desired move-in date. For fall quarter, begin looking in early summer (May-June). On-campus housing applications typically open in spring. Off-campus apartments near UCI fill up quickly, especially in areas like Verano Place and UTC, so apply early!
+                For UCI students, start your housing search 3-4 months before your desired move-in date. For fall quarter, begin looking in early summer (May-June). On-campus housing applications typically open in spring. Off-campus apartments near UCI fill up quickly, especially in areas like Verano Place and UTC, so apply early!
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">

@@ -1,4 +1,5 @@
-import { Search, SlidersHorizontal } from "lucide-react";
+import { useState } from "react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
@@ -7,11 +8,14 @@ import { Label } from "./ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Checkbox } from "./ui/checkbox";
 
+
 interface HousingFiltersProps {
   onFilterChange: (filters: any) => void;
 }
 
+
 export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
+  const [searchTerm, setSearchTerm] = useState("");
   return (
     <div className="bg-white border rounded-lg p-4 mb-6">
       <div className="flex flex-col md:flex-row gap-4">
@@ -19,11 +23,28 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="Search by location, neighborhood..."
-              className="pl-10"
+              placeholder="Search by location, neighborhood, amenities... (e.g., 'pool', 'on campus', 'Irvine')"
+              className="pl-10 pr-10"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                onFilterChange({ searchTerm: e.target.value });
+              }}
             />
+            {searchTerm && (
+              <button
+                onClick={() => {
+                  setSearchTerm("");
+                  onFilterChange({ searchTerm: "" });
+                }}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
+
 
         <Select>
           <SelectTrigger className="w-full md:w-48">
@@ -38,6 +59,7 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
           </SelectContent>
         </Select>
 
+
         <Select>
           <SelectTrigger className="w-full md:w-48">
             <SelectValue placeholder="Bedrooms" />
@@ -49,6 +71,7 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
             <SelectItem value="3">3+ Bedrooms</SelectItem>
           </SelectContent>
         </Select>
+
 
         <Sheet>
           <SheetTrigger asChild>
@@ -73,6 +96,7 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
                 </div>
               </div>
 
+
               <div>
                 <Label className="mb-3">Amenities</Label>
                 <div className="space-y-3">
@@ -86,6 +110,7 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
                   ))}
                 </div>
               </div>
+
 
               <div>
                 <Label className="mb-3">Distance from Campus</Label>
@@ -102,6 +127,7 @@ export function HousingFilters({ onFilterChange }: HousingFiltersProps) {
                   </SelectContent>
                 </Select>
               </div>
+
 
               <Button className="w-full">Apply Filters</Button>
             </div>

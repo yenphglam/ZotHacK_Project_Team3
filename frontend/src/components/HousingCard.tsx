@@ -7,14 +7,12 @@ export interface Housing {
   id: string;
   title: string;
   address: string;
-  price: number;
-  bedrooms: number;
-  bathrooms: number;
+  price: string;
+  bedrooms: string;
   distance: string;
-  available: string;
   image: string;
   amenities: string[];
-  type: "apartment" | "house" | "dorm" | "studio";
+  type: string;
 }
 
 interface HousingCardProps {
@@ -47,9 +45,8 @@ export function HousingCard({ housing, onClick }: HousingCardProps) {
         </div>
 
         <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-          <span>{housing.bedrooms} bed</span>
-          <span>{housing.bathrooms} bath</span>
-          <span>{housing.distance} from campus</span>
+          <span>{housing.bedrooms} bedrooms</span>
+          <span>{housing.distance}</span>
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -60,9 +57,6 @@ export function HousingCard({ housing, onClick }: HousingCardProps) {
           ))}
         </div>
 
-        <div className="mt-3 pt-3 border-t text-sm text-gray-500">
-          Available {housing.available}
-        </div>
       </CardContent>
     </Card>
   );

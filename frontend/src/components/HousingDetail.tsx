@@ -1,4 +1,4 @@
-import { X, MapPin, DollarSign, Calendar, Home, Wifi, Car, WashingMachine, PawPrint, Zap, Droplet } from "lucide-react";
+import { MonitorCog, Turntable, EvCharger, Bike, Bone, CigaretteOff, WavesLadder, LandPlot, Bath,SquareLibrary, BookOpenText,LampDesk, Dumbbell,Beef, Mic, X, MapPin, DollarSign, Calendar, Home, Wifi, Car, WashingMachine, PawPrint, Zap, Droplet } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -16,15 +16,30 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
 
   const amenityIcons: Record<string, any> = {
     "Parking": Car,
-    "WiFi": Wifi,
+    "Wifi": Wifi,
     "Laundry": WashingMachine,
     "Pet-Friendly": PawPrint,
     "Utilities Included": Zap,
+    "Clubhouse": Mic,
+    "BBQ area": Beef,
+    "Fitness center": Dumbbell,
+    "Workspace": LampDesk,
+    "Study Rooms": BookOpenText,
+    "Study Lounges": SquareLibrary,
+    "Pool": WavesLadder,
+    "Private Bathrooms": Bath,
+    "Gym Access": LandPlot,
+    "Smoke-free": CigaretteOff,
+    "Pet-friendly": Bone,
+    "Yoga room": Bike,
+    "EV charging": EvCharger,
+    "Rooftop deck": Turntable,
+    "Controlled access": MonitorCog
   };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] max-w-[1500px] max-h-[100vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{housing.title}</DialogTitle>
         </DialogHeader>
@@ -41,7 +56,7 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <h3 className="mb-2">Details</h3>
+                <h3 className="mb-2 font-bold">Details</h3>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-gray-700">
                     <DollarSign className="h-4 w-4 text-gray-400" />
@@ -49,26 +64,22 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
                   </div>
                   <div className="flex items-center gap-2 text-gray-700">
                     <Home className="h-4 w-4 text-gray-400" />
-                    <span>{housing.bedrooms} bedrooms, {housing.bathrooms} bathrooms</span>
+                    <span>{housing.bedrooms} bedrooms</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-700">
                     <MapPin className="h-4 w-4 text-gray-400" />
                     <span>{housing.address}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-gray-700">
-                    <Calendar className="h-4 w-4 text-gray-400" />
-                    <span>Available {housing.available}</span>
-                  </div>
                 </div>
               </div>
 
               <div>
-                <h3 className="mb-2">Property Type</h3>
+                <h3 className="mb-2 font-bold">Property Type</h3>
                 <Badge>{housing.type}</Badge>
               </div>
 
               <div>
-                <h3 className="mb-3">Amenities</h3>
+                <h3 className="mb-3 font-bold">Amenities</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {housing.amenities.map((amenity) => {
                     const Icon = amenityIcons[amenity] || Home;
@@ -85,28 +96,22 @@ export function HousingDetail({ housing, open, onClose }: HousingDetailProps) {
 
             <div className="space-y-4">
               <div>
-                <h3 className="mb-2">Description</h3>
+                <h3 className="mb-2 font-bold">Description</h3>
                 <p className="text-gray-700">
                   This {housing.type} is located {housing.distance} from campus, making it perfect for students. 
-                  The property features {housing.bedrooms} spacious bedrooms and {housing.bathrooms} modern bathrooms. 
+                  The property features {housing.bedrooms} spacious bedrooms. 
                   With amenities including {housing.amenities.slice(0, 3).join(', ')}, you'll have everything you need 
                   for a comfortable college living experience.
                 </p>
               </div>
 
               <div>
-                <h3 className="mb-2">Location</h3>
+                <h3 className="mb-2 font-bold">Location</h3>
                 <p className="text-gray-700 mb-2">
-                  {housing.distance} from main campus
+                  {housing.distance === "on campus"
+                  ? "On Campus"
+                  : `${housing.distance}`}
                 </p>
-                <div className="bg-gray-100 rounded-lg p-4 text-center text-sm text-gray-600">
-                  Map view would appear here
-                </div>
-              </div>
-
-              <div className="space-y-3 pt-4">
-                <Button className="w-full">Schedule a Tour</Button>
-                <Button variant="outline" className="w-full">Contact Landlord</Button>
               </div>
             </div>
           </div>
